@@ -1,46 +1,38 @@
 ############################################################
 ############ Fonctions de bases à utiliser dans R ####################
+############ Ex: "VEM_last" ####################
+############ Inférence du modele par VEM ####################
 ############################################################
 
-#librairies nécessaires
-library(sna)
-library(MASS)
-library(huge)
-library(glasso)
-library(blockmodels)
-library(mclust)
-library(dplyr)
-library(ggplot2)
-library(devtools)
-
-source('Main_function_last.R')
-
+##########################################################################
+# Inference du model SBM avec melange par VEM
 VEM <- function(S,K, niter=100, epsilon_tau=1e-4, epsilon_eta = 1e-4,verbose = FALSE){
-  
-A=array(0,dim=c(N,K,K))
+   # niter=100; epsilon_tau=1e-4; epsilon_eta = 1e-4; verbose = FALSE
   
 ##########################################################################
 #gere les Scores d'entrées matrice ou vecteur et les rend en vecteur
   
   if(is.null(dim(S)))
-  {
-    N <- length(S)
-    n <-(1+sqrt(1+8*N))/2
-    transfo_indices <- indices(n)
-    mat_S <- vect_mat_low(S)
-    vec_S <- S
-  }else{
-    n=length(S[1,])
-    N=(n-1) * n / 2
-    transfo_indices <- indices(n)
-    mat_S <- S
-    vec_S <- mat_vect_low(S)
-  }
-  
+     {
+     N <- length(S)
+     n <-(1+sqrt(1+8*N))/2
+     transfo_indices <- indices(n)
+     mat_S <- vect_mat_low(S)
+     vec_S <- S
+     }else{
+        n=length(S[1,])
+        N=(n-1) * n / 2
+        transfo_indices <- indices(n)
+        mat_S <- S
+        vec_S <- mat_vect_low(S)
+     }
+   
+   A=array(0,dim=c(N,K,K))
+   
 ##############################################################################  
   
   #initialisation des paramètres eta et G (G a deux classes arete ou pas)
-  param_gm <- Mclust(vec_S,G=2) 
+  param_gm <- Mclust(vec_S, G=2, verbose=FALSE) 
   eta_init<- param_gm$z
   g_init <- param_gm$classification-1
   
@@ -51,27 +43,22 @@ A=array(0,dim=c(N,K,K))
     g_init <- 1 - g_init
   }
 
-  
   eta0 <- array(rep(eta_init[,1],K*K),c(N,K,K)) #ok
   eta1 <- array(rep(eta_init[,2],K*K),c(N,K,K)) 
   
-    
   #initialisation des tau et  Pi comme la moyenne des tau de chaque classe
-  param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init))
+  param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), plotting='', verbosity=0)
   param_sbm$estimate()
   tau_init <- param_sbm$memberships[[K]]$Z
   tau_hat <- tau_init
   Pi_hat = colMeans(tau_hat)
-  
 
   #init des normales, distribution des normales
   phi0 <-phi1<-  rep(0,2)
-  
-  
+
   #init du vecteur de borne inf pour plot
   vec_BI <- rep(0, 3*niter)
-  
-  
+
   #itération 
   diff = 2*epsilon_tau
   t<-0
@@ -184,4 +171,20 @@ A=array(0,dim=c(N,K,K))
   return(output)
 }
 
+
+##########################################################################
+# Calcul de la borne inf
+borne_inf <- function(tau_hat,Pi_hat,A,eta0,eta1){
+   borne_inf <- sum(tau_hat %*% log(Pi_hat))  - sum(tau_hat * log(tau_hat)) +
+      .5*(sum(sapply(1:K, function(k){ sapply(1:K, function(l){
+         t(tau_hat[,k]) %*% as.matrix(vect_mat_low(A[,k,l])) %*% tau_hat[,l]})
+      }))) - 
+      .5*(sum(sapply(1:K, function(k){ sapply(1:K, function(l){
+         t(tau_hat[,k]) %*% 
+            as.matrix(vect_mat_low(eta0[, k, l]*log(eta0[, k, l]) +
+                                      eta1[, k, l]*log(eta1[, k, l]))) %*% 
+            tau_hat[,l]})
+      }))) 
+   return(borne_inf)
+}
 
