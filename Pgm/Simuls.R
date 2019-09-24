@@ -1,4 +1,4 @@
-# dataSimation of edge scores
+# Simulation of edge scores
 rm(list=ls())
 
 library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMtree); library(mclust); 
@@ -9,8 +9,9 @@ source('Functions/VEMFunctions.R')
 # Dirs
 simDir = '../Simul/'
 
-# Dims
-p = 30; n = 50; K = 3; g = 2; simNb = 50
+# Dims 
+# p = 20, 30, 50, 80, n = 20, 50, 100
+p = 20; n = 20; K = 3; g = 2; simNb = 50
 gLassoMethod = 'mb'
 simName = paste0('dataSimVEM-n', n, '-p', p, '-K', K, '-g', g, '-', gLassoMethod)
 
@@ -39,7 +40,8 @@ for(sim in simInit:simNb){
    cat('Glasso ', sim, ':'); vemGlasso = VEM(scoreGlasso, K)
    cat('\nLogGlasso ', sim, ':'); vemLogGlasso = VEM(log(1+scoreGlasso), K)
    cat('\nTree ', sim, ':'); vemTree = VEM(scoreTree, K)
-   cat('\nLogitTree ', sim, ':'); vemLogitTree = VEM(qlogis(scoreTree), K)
+   # cat('\nLogitTree ', sim, ':'); vemLogitTree = VEM(qlogis(scoreTree), K)
+   vemLogitTree = c()
    # Export   
    simRes[[sim]] = list(parms=parms, dataSim=dataSim, sbmG=sbmG, 
                         scoreGlasso=scoreGlasso, scoreTree=scoreTree, 

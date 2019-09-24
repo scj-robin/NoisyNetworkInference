@@ -10,7 +10,7 @@ source('Functions/VEMFunctions.R')
 simDir = '../Simul/'
 
 # Dims
-p = 20; n = 100; K = 3; g = 2; gLassoMethod = 'mb'
+p = 20; n = 50; K = 3; g = 2; gLassoMethod = 'mb'
 simName = paste0('dataSimVEM-n', n, '-p', p, '-K', K, '-g', g, '-', gLassoMethod)
 
 # Resultats
@@ -36,6 +36,8 @@ for(sim in 1:nbSim){
                   performance(prediction(simRes[[sim]]$vemLogitTree$Psi1, Gvec), "auc")@y.values[1][[1]])
 }
 par(mfrow=c(2, 1), pch=20, mex=.6)
-boxplot(ARI[, -5], main='ARI', ylim=c(min(ARI[, -5]), 1))
-boxplot(AUC[, -6], main='AUC', ylim=c(min(AUC[, -6]), 1))
-
+boxplot(ARI, main='ARI', ylim=c(min(ARI), 1))
+boxplot(AUC, main='AUC', ylim=c(min(AUC), 1))
+# boxplot(ARI[, -5], main='ARI', ylim=c(min(ARI[, -5]), 1))
+# boxplot(AUC[, -6], main='AUC', ylim=c(min(AUC[, -6]), 1))
+# 
