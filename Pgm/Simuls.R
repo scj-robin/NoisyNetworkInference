@@ -1,5 +1,5 @@
 # Simulation of edge scores
-rm(list=ls())
+rm(list=ls()); par(pch=20)
 
 library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMtree); library(mclust); 
 source('Functions/BasicFunctions.R')
@@ -9,9 +9,9 @@ source('Functions/VEMFunctions.R')
 # Dirs
 simDir = '../Simul/'
 
-# Dims 
+# Dims : p = nb nodes, n = nb replicates
 # p = 20, 30, 50, 80, n = 20, 50, 100
-p = 20; n = 20; K = 3; g = 2; simNb = 50
+p = 30; n = 50; K = 3; g = 2; simNb = 50
 gLassoMethod = 'mb'
 simName = paste0('dataSimVEM-n', n, '-p', p, '-K', K, '-g', g, '-', gLassoMethod)
 
@@ -29,18 +29,22 @@ if(file.exists(paste0(simDir, simName, '.Rdata'))){
    simRes = list(); simInit = 1
 }
 for(sim in simInit:simNb){
+   simLabel = paste0('n', n, '-p', p, '-s', sim)
    # Simul data
    dataSim = SimulZGY(pi, gamma, n, p)
    # Oracle : SBM sur G
-   sbmG = BM_bernoulli('SBM_sym', dataSim$G, plotting='', verbosity=0); sbmG$estimate()
+   sbmG = BM_bernoulli('SBM_sym', dataSim$G, plotting='', verbosity=0, ncores=1); 
+   sbmG$estimate()
    # Scores
    scoreGlasso = fitGlasso(dataSim$Y, method=gLassoMethod)
    scoreTree = fitEMtree(dataSim$Y)
    # VEM
-   cat('Glasso ', sim, ':'); vemGlasso = VEM(scoreGlasso, K)
-   cat('\nLogGlasso ', sim, ':'); vemLogGlasso = VEM(log(1+scoreGlasso), K)
-   cat('\nTree ', sim, ':'); vemTree = VEM(scoreTree, K)
-   # cat('\nLogitTree ', sim, ':'); vemLogitTree = VEM(qlogis(scoreTree), K)
+   par(mfrow=c(2, 2), cex=.6)
+   cat(simLabel, 'Glasso :'); vemGlasso = VEM(scoreGlasso, K); #plot(vemGlasso$borne_inf)
+   cat('\n', simLabel, 'LogGlasso :'); vemLogGlasso = VEM(log(1+scoreGlasso), K); #plot(vemLogGlasso$borne_inf[-1])
+   cat('\n', simLabel, 'Tree:'); vemTree = VEM(scoreTree, K); #plot(vemTree$borne_inf[-1])
+   # logitTree supprime : resultats trop mauvais
+   # cat('\nLogitTree ', sim, ':'); vemLogitTree = VEM(qlogis(scoreTree), K); ; plot(vemLogitTree$borne_inf[-1])
    vemLogitTree = c()
    # Export   
    simRes[[sim]] = list(parms=parms, dataSim=dataSim, sbmG=sbmG, 

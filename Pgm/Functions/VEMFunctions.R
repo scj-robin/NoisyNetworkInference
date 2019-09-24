@@ -47,7 +47,8 @@ VEM <- function(S,K, niter=100, epsilon_tau=1e-4, epsilon_eta = 1e-4,verbose = F
   eta1 <- array(rep(eta_init[,2],K*K),c(N,K,K)) 
   
   #initialisation des tau et  Pi comme la moyenne des tau de chaque classe
-  param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), plotting='', verbosity=0)
+  param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), 
+                            plotting='', verbosity=0, ncores=1)
   param_sbm$estimate()
   tau_init <- param_sbm$memberships[[K]]$Z
   tau_hat <- tau_init
@@ -162,7 +163,7 @@ VEM <- function(S,K, niter=100, epsilon_tau=1e-4, epsilon_eta = 1e-4,verbose = F
   Pi_hat <- Pi_hat[ord]  
   output <- list(tau_init  = tau_init[,ord], tau  = tau_hat[,ord], 
                  phi0 = phi0, phi1 = phi1,
-                 borne_inf = vec_BI)
+                 borne_inf = vec_BI[1:(3*t)])
   output$Pi_hat <- Pi_hat
   output$Gamma_hat <- Gamma_hat[ord,ord]
   output$Psi0 <- Psi0_hat
