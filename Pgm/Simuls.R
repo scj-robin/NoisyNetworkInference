@@ -2,7 +2,6 @@
 rm(list=ls())
 
 library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMtree); library(mclust); 
-# library(MASS)
 source('Functions/BasicFunctions.R')
 source('Functions/SimulFunctions.R')
 source('Functions/VEMFunctions.R')
@@ -11,7 +10,7 @@ source('Functions/VEMFunctions.R')
 simDir = '../Simul/'
 
 # Dims
-p = 50; n = 100; K = 3; g = 2; simNb = 100
+p = 30; n = 50; K = 3; g = 2; simNb = 50
 gLassoMethod = 'mb'
 simName = paste0('dataSimVEM-n', n, '-p', p, '-K', K, '-g', g, '-', gLassoMethod)
 
