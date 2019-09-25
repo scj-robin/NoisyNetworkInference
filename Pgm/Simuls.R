@@ -1,5 +1,5 @@
 # Simulation of edge scores
-rm(list=ls()); par(pch=20)
+rm(list=ls()); #par(pch=20)
 
 library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMtree); library(mclust); 
 source('Functions/BasicFunctions.R')
@@ -10,46 +10,80 @@ source('Functions/VEMFunctions.R')
 simDir = '../Simul/'
 
 # Dims : p = nb nodes, n = nb replicates
-# p = 20, 30, 50, 80, n = 20, 50, 100
-p = 30; n = 50; K = 3; g = 2; simNb = 50
-gLassoMethod = 'mb'
-simName = paste0('dataSimVEM-n', n, '-p', p, '-K', K, '-g', g, '-', gLassoMethod)
+# pList = c(20, 30, 50, 80); nList = c(20, 50, 100)
+pList = c(20, 30, 50, 80)
+n = 100; Ktrue = 3; g = 2; simNb = 50
 
-# Parms
-pi = (1:K); pi = pi / sum(pi)
-rho = log(p)/p
-gamma = (pi^g)[K:1]%o%(pi^g)[K:1]; gamma = rho*gamma/(t(pi)%*%gamma%*%pi)[1, 1]
-gamma[which(gamma>1)] = 1
-parms = list(pi=pi, gamma=gamma, rho=rho)
-
-# Boucle de simulation
-if(file.exists(paste0(simDir, simName, '.Rdata'))){
-   load(paste0(simDir, simName, '.Rdata')); simInit = length(simRes)+1
-}else{
-   simRes = list(); simInit = 1
-}
-for(sim in simInit:simNb){
-   simLabel = paste0('n', n, '-p', p, '-s', sim)
-   # Simul data
-   dataSim = SimulZGY(pi, gamma, n, p)
-   # Oracle : SBM sur G
-   sbmG = BM_bernoulli('SBM_sym', dataSim$G, plotting='', verbosity=0, ncores=1); 
-   sbmG$estimate()
-   # Scores
-   scoreGlasso = fitGlasso(dataSim$Y, method=gLassoMethod)
-   scoreTree = fitEMtree(dataSim$Y)
-   # VEM
-   par(mfrow=c(2, 2), cex=.6)
-   cat(simLabel, 'Glasso :'); vemGlasso = VEM(scoreGlasso, K); #plot(vemGlasso$borne_inf)
-   cat('\n', simLabel, 'LogGlasso :'); vemLogGlasso = VEM(log(1+scoreGlasso), K); #plot(vemLogGlasso$borne_inf[-1])
-   cat('\n', simLabel, 'Tree:'); vemTree = VEM(scoreTree, K); #plot(vemTree$borne_inf[-1])
-   # logitTree supprime : resultats trop mauvais
-   # cat('\nLogitTree ', sim, ':'); vemLogitTree = VEM(qlogis(scoreTree), K); ; plot(vemLogitTree$borne_inf[-1])
-   vemLogitTree = c()
-   # Export   
-   simRes[[sim]] = list(parms=parms, dataSim=dataSim, sbmG=sbmG, 
-                        scoreGlasso=scoreGlasso, scoreTree=scoreTree, 
-                        vemGlasso=vemGlasso, vemTree=vemTree, 
-                        vemLogGlasso=vemLogGlasso, vemLogitTree=vemLogitTree)
-   save(simRes, file=paste0(simDir, simName, '.Rdata'))
+# Boucle sur p
+for(p in pList){
+   simParms = paste0('simVEM-p', p, '-n', n, '-Ktrue', Ktrue, '-g', g, '/')
+   
+   # Parms
+   pi = (1:Ktrue); pi = pi / sum(pi)
+   rho = log(p)/p
+   gamma = (pi^g)[Ktrue:1]%o%(pi^g)[Ktrue:1]; gamma = rho*gamma/(t(pi)%*%gamma%*%pi)[1, 1]
+   gamma[which(gamma>1)] = 1
+   parms = list(pi=pi, gamma=gamma, rho=rho)
+   
+   # Boucle de simulation
+   K = Ktrue
+   for(sim in 1:simNb){
+      # Deja fait ?
+      simLabel = paste0('simul-K', K, '-s', sim); print(paste0(simParms, simLabel))
+      if(file.exists(paste0(simDir, simParms, simLabel, '.Rdata'))){
+         load(paste0(simDir, simParms, simLabel, '.Rdata')); 
+      }else{
+         simRes = list(parms=parms)
+         # Simul data
+         if(!is.element("dataSim", names(simRes))){
+            dataSim = SimulZGY(pi, gamma, n, p)
+            simRes$dataSim = dataSim
+         }
+         # Oracle : SBM sur G
+         if(!is.element("dataSim", names(simRes))){
+            sbmG = BM_bernoulli('SBM_sym', dataSim$G, plotting='', verbosity=0, ncores=1); 
+            sbmG$estimate()
+            simRes$sbmG = sbmG
+         }
+         # MB
+         if(!is.element("vemLogMB", names(simRes))){
+            scoreMB = fitHuge(simRes$dataSim$Y, method='mb')
+            cat(simLabel, 'MB :'); vemMB = VEM(scoreMB, K); 
+            cat('\n', simLabel, 'LogMB :'); vemLogMB = VEM(log(1+scoreMB), K); 
+            simRes$scoreMB = scoreMB
+            simRes$vemMB = vemMB
+            simRes$vemLogMB = vemLogMB
+         }
+         # Tree
+         if(!is.element("vemTree", names(simRes))){
+            scoreTree = fitEMtree(simRes$dataSim$Y)
+            cat('\n', simLabel, 'Tree:'); vemTree = VEM(scoreTree, K)
+            simRes$scoreTree = scoreTree
+            simRes$vemTree = vemTree
+         }
+         # # Tiger
+         # # if(!is.element("vemLogTiger", names(simRes))){
+         #    scoreTiger = fitHuge(simRes$dataSim$Y, method='tiger')
+         #    cat(simLabel, 'Tiger :'); vemTiger = VEM(scoreTiger, K)
+         #    cat('\n', simLabel, 'LogTiger :'); vemLogTiger = VEM(log(1+scoreTiger), K)
+         #    simRes$scoreTiger = scoreTiger
+         #    simRes$vemTiger = vemTiger
+         #    simRes$vemLogTiger = vemLogTiger
+         # # }
+         # Glasso
+         if(p < n){
+            if(!is.element("vemLogGlasso", names(simRes))){
+               scoreGlasso = fitHuge(simRes$dataSim$Y, method='glasso')
+               cat('\n', simLabel, 'Glasso :'); vemGlasso = VEM(scoreGlasso, K)
+               cat('\n', simLabel, 'LogGlasso :'); vemLogGlasso = VEM(log(1+scoreGlasso), K)
+               simRes$scoreGlasso = scoreGlasso
+               simRes$vemGlasso = vemGlasso
+               simRes$vemLogGlasso = vemLogGlasso
+            }
+         }
+         # Export   
+         save(simRes, file=paste0(simDir, simParms, simLabel, '.Rdata'))
+         cat('\n')
+      }
+   }
 }
