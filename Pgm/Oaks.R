@@ -12,15 +12,15 @@ source('Functions/VEMFunctions.R')
 dataDir = '../Data/'
 
 # Parms
-Kmax = 5
+Kmax = 4
 
 # Donnees
-dataName = 'BarentsFish'
+dataName = 'oaks'
 load(paste0(dataDir, dataName, '.Rdata'))
 n = nrow(Data$count); p = ncol(Data$count)
 
 # # MRFcov
-# X = glm(Data$count[, 1] ~ Data$covariates, family='poisson', x=TRUE)$x[, -1]
+# X = glm(Data$count[, 1] ~ as.factor(Data$covariates$tree) + Data$covariates$distTOground + Data$covariates$distTOtrunk, family='poisson', x=TRUE)$x[, -1]
 # d = ncol(X)
 # YX = cbind(Data$count, X)
 # mrf = MRFcov(YX, symmetrise='min', prep_covariates=TRUE, n_nodes=p, n_covariates=d, family='poisson')
@@ -29,9 +29,9 @@ n = nrow(Data$count); p = ncol(Data$count)
 # mrf$direct_coefs
 # bmrf = bootstrap_MRF(Data$count, n_bootstrap=1e1, symmetrise='min', n_nodes=p, family='poisson')
 
-
 # PLN
-# pln = PLN(Data$count ~ Data$covariates)
+# pln = PLN(Data$count ~ as.factor(Data$covariates$tree) + Data$covariates$distTOground + 
+             # Data$covariates$distTOtrunk)
 # save(pln, file=paste0(dataDir, dataName, '-pln.Rdata'))
 load(paste0(dataDir, dataName, '-pln.Rdata'))
 Sigma = pln$model_par$Sigma
@@ -39,10 +39,8 @@ Omega = solve(Sigma)
 Beta = t(pln$model_par$Theta); d = nrow(Beta)
 
 # PLN net
-# plnnet = PLNnetwork(Data$count ~ Data$covariates)
-# logLambda = log(plnnet$penalties); lMin = min(logLambda); lMax = max(logLambda)
-# lambda = exp(seq(lMax, 2*lMin-lMax, length.out=2*length(logLambda)))
-# plnnet = PLNnetwork(Data$count ~ Data$covariates, penalties=lambda)
+# plnnet = PLNnetwork(Data$count ~ as.factor(Data$covariates$tree) + Data$covariates$distTOground + 
+#                        Data$covariates$distTOtrunk)
 # save(plnnet, file=paste0(dataDir, dataName, '-plnnet.Rdata'))
 load(paste0(dataDir, dataName, '-plnnet.Rdata'))
 plnnet$plot()
@@ -53,7 +51,7 @@ Beta = t(plnnetBest$model_par$Theta); d = nrow(Beta)
 
 # Scores MB
 # scoreMB = fitHuge(Sigma, method='mb'); hist(scoreMB, breaks=p)
-vemMB = list(); for(K in 1:Kmax){vemMB[[K]] = VEM(S=scoreMB, K, explorFact=3)}
+# vemMB = list(); for(K in 1:Kmax){vemMB[[K]] = VEM(S=scoreMB, K)}
 # save(scoreMB, vemMB, file=paste0(dataDir, dataName, '-vemMB.Rdata'))
 load(paste0(dataDir, dataName, '-vemMB.Rdata'))
 
@@ -65,14 +63,9 @@ load(paste0(dataDir, dataName, '-vemMB.Rdata'))
 load(paste0(dataDir, dataName, '-vemTree.Rdata'))
 
 # Choose K
-pen = .5*((K-1)*log(p) + K*(K+1)/2*log(p*(p+1)/2))
 lbMB = unlist(lapply(vemMB, function(v){v$borne_inf[length(v$borne_inf)]}))
-iclMB = lbMB - pen
 lbTree = unlist(lapply(vemTree, function(v){v$borne_inf[length(v$borne_inf)]}))
-iclTree = lbTree - pen
-par(mfrow=c(2, 1), mex=.6)
-plot(lbMB, type='b'); lines(iclMB, type='b', col=4)
-plot(lbTree, type='b'); lines(iclTree, type='b', col=4)
+plot(lbMB, type='b'); plot(lbTree, type='b')
 Kopt = which.max(lbTree); abline(v=Kopt, col=2)
 
 # Network
@@ -84,8 +77,8 @@ Tau = vemTree[[Kopt]]$tau; Zhat = apply(Tau, 1, which.max); groupSize = table(Zh
 vemTree[[Kopt]]$Pi_hat; vemTree[[Kopt]]$Gamma_hat
 
 # Network plot
-gplot(Ghat, gmode='graph', vertex.col=Zhat, edge.col=8)
-# plot(graph_from_adjacency_matrix(Ghat, mode='undirected'), vertex.color=Zhat)
+gplot(Ghat, gmode='graph', vertex.col=Zhat)
+plot(graph_from_adjacency_matrix(Ghat, mode='undirected'))
 
 # Covariance
 nodeOrder = order(Tau%*%(1:Kopt))

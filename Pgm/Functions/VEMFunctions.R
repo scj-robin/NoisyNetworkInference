@@ -6,7 +6,7 @@
 
 ##########################################################################
 # Inference du model SBM avec melange par VEM
-VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FALSE){
+VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FALSE, explorFact=1.5){
    # niter=100; epsilon_tau=1e-4; epsilon_eta = 1e-4; verbose = FALSE
   
 ##########################################################################
@@ -48,7 +48,7 @@ VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FAL
   
   #initialisation des tau et  Pi comme la moyenne des tau de chaque classe
   param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), 
-                            plotting='', verbosity=0, ncores=1)
+                            plotting='', verbosity=0, ncores=1, exploration_factor=explorFact)
   param_sbm$estimate()
   tau_init <- param_sbm$memberships[[K]]$Z
   tau_hat <- tau_init
