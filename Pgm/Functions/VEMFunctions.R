@@ -6,7 +6,7 @@
 
 ##########################################################################
 # Inference du model SBM avec melange par VEM
-VEM <- function(S,K, niter=100, epsilon_tau=1e-4, epsilon_eta = 1e-4,verbose = FALSE){
+VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FALSE){
    # niter=100; epsilon_tau=1e-4; epsilon_eta = 1e-4; verbose = FALSE
   
 ##########################################################################

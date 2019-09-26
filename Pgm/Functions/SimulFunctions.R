@@ -28,6 +28,7 @@ SimulZGY <- function(pi, gamma, n, p, connected=TRUE){
 ##########################################################################
 # Recupere les scores du lasso
 fitHuge <- function(Y, method='mb'){
+   p = ncol(Y)
    # penalites
    resHuge = huge(Y, method=method, verbose=FALSE); lMin = min(resHuge$lambda); lMax = max(resHuge$lambda)
    while(min(resHuge$sparsity)>0){lMax = 2*lMax; resHuge = huge(Y, lambda=lMax, method=method, verbose=FALSE)}
