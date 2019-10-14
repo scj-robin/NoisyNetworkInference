@@ -1,4 +1,4 @@
-# dataSimation of edge scores
+# Gathering simulation results
 rm(list=ls())
 
 library(mclust); library(ROCR)
@@ -21,7 +21,7 @@ for(p in pList){
       
       # Results
       K = Ktrue
-      ARI = matrix(0, nbSim, 4); colnames(ARI) = c('Oracle', 'MB', 'Glasso', 'Tree')
+      ARI = matrix(0, nbSim, 4); colnames(ARI) = c('Oracle', 'vemMB', 'vemGlasso', 'vemTree')
       AUC = matrix(0, nbSim, 6); colnames(AUC) = c('MB', 'vemMB', 'Glasso', 'vemGlasso', 'Tree', 'vemTree')
       lastSim = 0
       for(sim in 1:nbSim){
@@ -61,7 +61,15 @@ for(p in pList){
       ARIall = rbind(ARIall, ARI); AUCall = rbind(AUCall, AUC); 
    }
 }
-names(Parms) = c('p', 'n', 'sim')
-save(Parms, ARIall, AUCall, 
-     file=paste0(simDir, 'simVEM-Ktrue', Ktrue, '-g', g, '-K', K, '.Rdata'))
+
+# Merging
+colnames(Parms) = names(Parms) = c('p', 'n', 'sim')
+colnames(AUCall) = paste0('AUC.', colnames(AUCall))
+colnames(ARIall) = paste0('ARI.', colnames(ARIall))
+Res = as.data.frame(cbind(Parms, ARIall, AUCall))
+
+
+# Export
+write.csv(Res, file=paste0(simDir, 'simVEM-Ktrue', Ktrue, '-g', g, '-K', K, '.csv'), 
+          row.names=FALSE)
 

@@ -1,0 +1,90 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Loss function}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Log-likelihood}
+\begin{align*}
+ \log p(Z, G, S) 
+ = & \log p(Z; \pi) + \log p(G \mid Z; \gamma) + \log p(S \mid G; \psi) \\
+ = & \sum_{i, k} Z_{ik} \log \pi_k 
+ + \sum_{i < j} \sum_{k, \ell} Z_{ik} Z_{j\ell} \left(G_{ij} \log \gamma_{k\ell} + (1 - G_{ij}) \log (1 - \gamma_{k\ell})\right) \\
+ & + \sum_{i < j} G_{ij} \log f_1(S_{ij}) + (1 - G_{ij}) \log f_0(S_{ij})
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Approximate distribution $q(Z, G) \approx p(Z, G \mid S)$}
+\begin{equation}
+q(Z, G) = q(Z) q(G \mid Z) := q(Z) p(G \mid Z, S)
+\end{equation}
+where
+$$
+p(G \mid Z, S) = \prod_{i, j} p(G_{ij} \mid Z_i, Z_j, S_{ij})
+$$
+and
+$$
+q(Z) = \prod_i q_i(Z_i) = \prod_{i, k} \tau_{ik}^{Z_{ik}}.
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Divergence $KL(q(Z, G) ; p(Z, G \mid S))$}
+\begin{align*}
+KL(q(Z, G) ; p(Z, G \mid S)) 
+& = KL(q(Z) p(G \mid Z, S); p(Z \mid S) p(G \mid Z, S)) \\
+& = KL(q(Z); p(Z \mid S)) 
++ \Esp_{q(Z)} \underset{=0}{\underbrace{KL(p(G \mid Z, S); p(G \mid Z, S))}}
+\end{align*}
+Still, the conditional entropy of $q(G \mid Z)$ contributes to the lower bound.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Lower bound $J(\theta, q)$}
+\begin{align} \label{eq:lowerBound}
+ J(\theta, q) 
+ = & \log p_\theta(S) - KL(q(Z, G) ; p(Z, G \mid S)) \nonumber \\
+ = & \Esp_q \log p_\theta(Z, G, S) + H(q(Z))  + \Esp_q H(q(G \mid Z)) \\ 
+ = & \sum_{i, k} \tau_{ik} \log \pi_k 
+ + \sum_{i < j} \left(\etabar_{ij} \log \gamma_{k\ell} + (1 - \etabar_{ij}) \log (1 - \gamma_{k\ell})\right) \nonumber \\
+ & + \sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left(\eta^{k\ell}_{ij} \log f_1(S_{ij}) + (1 - \eta^{k\ell}_{ij}) \log f_0(S_{ij})\right) \nonumber \\
+ & - \sum_{i, k} \tau_{ik} \log \tau_{ik} - \sum_{i< j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left( \eta^{k\ell}_{ij} \log \eta^{k\ell}_{ij} + (1 - \eta^{k\ell}_{ij}) \log (1 - \eta^{k\ell}_{ij}) \right)
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Estimation equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{VE step}
+Denoting 
+$$
+\log A_{ijk\ell} = \eta^{k\ell}_{ij} \left(\log \gamma_{k\ell} + \log f_1(S_{ij})\right) + (1 - \eta^{k\ell}_{ij}) \left(\log (1 - \gamma_{k\ell}) + \log f_0(S_{ij}) \right)
+$$
+setting the derivative wrt $\tau_{ik}$ to zero with the contraint $\sum_{k} \tau_{ik} = 0$ gives
+$$
+\log \tau_{ik} = \log \pi_k + \sum_{j, \ell} \tau_{j\ell} \log A_{ijk\ell} + \cst
+\qquad \Leftrightarrow \qquad
+\tau_{ik} \propto \pi_k \prod_{j, \ell} \left(A_{ijk\ell}\right)^{\tau_{j\ell}}
+$$
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{M step}
+Setting the derivative wrt to each parameter gives
+\begin{align*}
+ \widehat{\pi}_{ik} & = \sum_{i} \tau_{ik} \left/ n \right.,  
+ & \widehat{\gamma}_{k\ell} & = \sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \eta^{k\ell}_{ij} \left/ \sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \right..
+\end{align*}
+Furthermore, if $f(\cdot, \psi_u) = \Ncal(\cdot, \mu_u, \sigma_u^2)$ (i.e $\psi_u = (\mu_u, \sigma_u^2)$), 
+\begin{align*}
+ \widehat{\mu}_0 & = \sum_{i < j} (1 - \etabar_{ij}) S_{ij} \left/ \sum_{i < j} (1 - \etabar_{ij}) \right. 
+ & \widehat{\sigma}_0^2 & = \sum_{i < j} (1 - \etabar_{ij}) (S_{ij} - \widehat{\mu}_0)^2 \left/ \sum_{i < j} (1 - \etabar_{ij}) \right. \\ 
+ \widehat{\mu}_1 & = \sum_{i < j} \etabar_{ij} S_{ij} \left/ \sum_{i < j} \etabar_{ij} S_{ij} \right. 
+ & \widehat{\sigma}_1^2 & = \sum_{i < j} \etabar_{ij} (S_{ij} - \widehat{\mu}_0)^2 \left/ \sum_{i < j} \etabar_{ij} S_{ij} \right. \\ 
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{By-product}
+The conditional probability for an edge to be part of $G$ is denoted $\psi_{ij}^1$:
+$$
+\psi_{ij}^1 := \Pt\{G_{ij} = 1\} = \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \eta^{k\ell}_{ij} 
+$$
+and we denote $\psi_{ij}^0 = 1 - \psi_{ij}^1$.
+

@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Data}
+\begin{itemize}
+ \item $p$ nodes = species ($1 \leq i, j \leq n$)
+ \item $K$ clusters  ($1 \leq k, \ell \leq K$)
+ \item $Z_i =$ cluster of node $i$, $Z_{ik} = \Ibb\{Z_i = k\}$, $Z = (Z_i)$
+ \item $G_{ij} = \Ibb\{i \sim k\} = $ connection between nodes $i$ and $j$, $G = (G_{ij}) =$ unobserved network
+ \item $S_{ij} = $ score of edge between nodes $i$ and $j$, $S = (S_{ij}) =$ observed score matrix
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Parameters}
+\begin{itemize}
+ \item $\pi = (\pi_k) =$ cluster proportions
+ \item $\gamma = (\gamma_{k\ell}) =$ between cluster connection probabilities
+ \item $\psi_0 =$ parameter of the score distribution for absent edge $p(S_{ij} \mid G_{ij} = 0)$ (idem $\psi_1$ for present edge), $\psi = (\psi_0, \psi_1)$
+ \item $\theta = (\pi, \gamma, \psi)$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Model}
+\begin{itemize}
+ \item $(Z_i)$ iid, $$Z_i \sim \Mcal(1, \pi)$$
+ \item $(G_{ij})$ independent conditionally on $Z$,
+ $$
+ (G_{ij} \mid Z_i = k, Z_j = \ell) \sim \Bcal(\gamma_{k\ell})
+ $$
+ \item $(S_{ij})$ independent conditionally on $G$,
+ $$
+ (S_{ij} \mid G_{ij} = u) \sim F(\cdot; \psi_u), \qquad u = 0, 1
+ $$
+\end{itemize}
+We further denote $F_u(\cdot) = F(\cdot; \psi_u)$ and $f_u(\cdot)$ the corresponding pdf.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Properties and definitions}
+\begin{itemize}
+ \item $S$ and $Z$ independent conditionally on $G$:
+ $$
+ p(Z \mid G, S) = p(Z \mid G), \qquad p(S \mid G, Z) = p(S \mid G)
+ $$
+ \item Distribution of $G_{ij}$
+ \begin{align*}
+%  P(G_{ij} = 1) & = \sum_{k, \ell} \pi_k \pi_\ell \gamma_{k\ell} =: \gammabar \\
+%  P(G_{ij} = 1 \mid S_{ij}) & = \frac{\gammabar f_1(S_{ij})}{\gammabar f_1(S_{ij}) + (1 - \gammabar) f_0(S_{ij})} \\
+ P(G_{ij} = 1 \mid S_{ij}, Z_i=k, Z_j=\ell) & = \frac{\gamma_{k\ell} f_1(S_{ij})}{\gamma_{k\ell} f_1(S_{ij}) + (1 - \gamma_{k\ell}) f_0(S_{ij})}  =: \eta^{k\ell}_{ij} \\
+ \Pt(G_{ij} = 1 \mid S_{ij}) = \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \eta^{k\ell}_{ij} =: \overline{\eta}_{ij}
+ \end{align*}
+ \item Kullback-Leibler divergence
+ \begin{align*}
+  KL(q(U) ; p(U)) 
+  & = \Esp_q (\log q(U) - \log p(U)) \\
+  KL(q(U, V) ; p(U, V)) 
+  & = \Esp_{q(U, V)} (\log q(U) + \log(q (V \mid U) - \log p(U) - \log p(V \mid U) \\
+  & = KL(q(U) ; p(U)) + \Esp_{q(U)} KL(q(V \mid U), p(V \mid U))
+ \end{align*}
+\end{itemize}
