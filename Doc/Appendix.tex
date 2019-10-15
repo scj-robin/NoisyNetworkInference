@@ -1,0 +1,23 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Non-parametric emission distributions} \label{sec:np}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Non-parametric estimates.}
+Given a kernel function $\kappa$ (s.t. $\int \kappa(x) \d x = 1$), we propose to estimate the conditional score pdf $f_u$ ($u = 0, 1$) as
+$$
+\widehat{f}_u(s) = \sum_{a < b} w_{ab}^u \kappa(s - S_{ab}), 
+\qquad \text{with } \sum_{a < b} w_{ab}^u  = 1.
+$$
+For each $u = 0, 1$, the maximisation of the lower bound \eqref{eq:lowerBound} wrt $w^u = (w^u_{ab})_{a < b}$ is equivalent to the maximization of
+$$
+\sum_{i < j} h^u_{ij} \log \widehat{f}_u(S_{ij}) - \lambda^u \sum_{a < b} w_{ab}^u
+$$
+with
+$h^1_{ij} = \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \eta^{k\ell}_{ij}$ and $h^0_{ij} = \sum_{k, \ell} \tau_{ik} \tau_{j\ell} (1 - \eta^{k\ell}_{ij})$. The derivative wrt $w^u_{ab}$ is zero when
+$$
+\sum_{i < j} h^u_{ij} \frac{\kappa(S_{ij} - S_{ab})}{\widehat{f}_u(S_{ij})} - \lambda^u = 0,
+$$
+which has no close form solution. 
+
+A pragmatic, unjustified choice is to simply set $w^u_{ab} = \psi^u_{ab}$, that is to let each pair $(a, b)$ contribute to the estimation $f_1$ (resp. $f_0$) proportionally to the probability for the edge $G_{ab}$ to be equal to $1$ (resp. $0$).
