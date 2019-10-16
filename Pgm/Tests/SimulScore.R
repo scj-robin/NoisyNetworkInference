@@ -3,12 +3,12 @@ rm(list=ls()); par(pch=20)
 
 library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMtree); library(mclust); library(saturnin)
 # library(MASS)
-source('Functions/BasicFunctions.R')
-source('Functions/SimulFunctions.R')
-source('Functions/VEMFunctions.R')
+source('../Functions/BasicFunctions.R')
+source('../Functions/SimulFunctions.R')
+source('../Functions/VEMFunctions.R')
 
 # Dims
-p = 30; n = 100; K = 3
+p = 30; n = 30; K = 3
 gLassoMethod = 'mb'
 
 # Parms
