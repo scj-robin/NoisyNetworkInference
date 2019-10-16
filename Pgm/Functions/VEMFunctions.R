@@ -64,8 +64,8 @@ VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FAL
   diff = 2*epsilon_tau
   t<-0
   
-  while ((t < niter) & (diff>epsilon_tau)){cat(t, '')
-    t <- t+1
+  while ((t < niter) & (diff>epsilon_tau)){
+     t <- t+1; cat(t, '')
     #Etape M:
     
     #Calcul gamma:

@@ -5,17 +5,19 @@ library(sna); library(mvtnorm); library(huge); library(blockmodels); library(EMt
 source('Functions/BasicFunctions.R')
 source('Functions/SimulFunctions.R')
 source('Functions/VEMFunctions.R')
+source('Functions/VEMmultiFunctions.R')
 
 # Dirs
 simDir = '../Simul/'
 
 # Dims : p = nb nodes, n = nb replicates
+pList = c(20, 30, 50, 80); nList = c(20, 50, 100, 200)
 # pList = c(20, 30, 50, 80); nList = c(20, 50, 100)
 pList = c(20, 30, 50, 80); nList = c(20, 50, 100, 200)
 Ktrue = 3; g = 2; simNb = 50
 
 for(p in pList){
-   # p = 80
+   # p = 20
    for(n in nList){
       # n = 50
       simParms = paste0('simVEM-p', p, '-n', n, '-Ktrue', Ktrue, '-g', g, '/')
@@ -70,6 +72,12 @@ for(p in pList){
             simRes$scoreTree = scoreTree
             simRes$vemTree = vemTree
          }
+         cat('MB-Tree ')
+         if(!is.element("vemMBTree", names(simRes))){
+            Smat = cbind(mat_vect_low(simRes$scoreMB), mat_vect_low(simRes$scoreTree))
+            cat('\n', simLabel, 'MB-Tree:'); vemMBTree = VEMmulti(Smat, K)
+            simRes$vemMBTree = vemMBTree
+         }
          # # Tiger
          # # if(!is.element("vemLogTiger", names(simRes))){
          #    scoreTiger = fitHuge(simRes$dataSim$Y, method='tiger')
@@ -90,6 +98,13 @@ for(p in pList){
                simRes$vemGlasso = vemGlasso
                # simRes$vemLogGlasso = vemLogGlasso
             }
+            cat('MB-Glasso-Tree ')
+            if(!is.element("vemMBGlassoTree", names(simRes))){
+               Smat = cbind(mat_vect_low(simRes$scoreMB), mat_vect_low(simRes$scoreGlasso), 
+                            mat_vect_low(simRes$scoreGlasso))
+               cat('\n', simLabel, 'MB-Glasso-Tree:'); vemMBGlassoTree = VEMmulti(Smat, K)
+               simRes$vemMBGlassoTree = vemMBGlassoTree
+            }
          }
          cat('sbmMB ')
          if(!is.element("sbmMB", names(simRes))){
@@ -100,16 +115,18 @@ for(p in pList){
             sbmMB$estimate()
             simRes$sbmMB = sbmMB
          }
-         cat('sbmGlasso ')
-         if(!is.element("sbmGlasso", names(simRes))){
-            # sbmGlasso : SBM on glasso-inferred network
-            selGlasso = huge.select(huge(simRes$dataSim$Y, method='glasso'))
-            graphGlasso = 1*(selGlasso$opt.icov!=0)
-            if(sum(graphGlasso)>p){
-               sbmGlasso = BM_bernoulli('SBM_sym', graphGlasso, plotting='', verbosity=0, ncores=1); 
-               sbmGlasso$estimate()
-               simRes$sbmGlasso = sbmGlasso
-            }else{simRes$sbmGlasso = 'failed'}
+         if(p < n){
+            cat('sbmGlasso ')
+            if(!is.element("sbmGlasso", names(simRes))){
+               # sbmGlasso : SBM on glasso-inferred network
+               selGlasso = huge.select(huge(simRes$dataSim$Y, method='glasso'))
+               graphGlasso = 1*(selGlasso$opt.icov!=0)
+               if(sum(graphGlasso)>p){
+                  sbmGlasso = BM_bernoulli('SBM_sym', graphGlasso, plotting='', verbosity=0, ncores=1); 
+                  sbmGlasso$estimate()
+                  simRes$sbmGlasso = sbmGlasso
+               }else{simRes$sbmGlasso = 'failed'}
+            }
          }
          cat('sbmTree ')
          if(!is.element("sbmTree", names(simRes))){
