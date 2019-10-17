@@ -12,7 +12,7 @@ simDir = '../Simul/'
 # Dims
 Ktrue = 3; g = 2; nbSim = 50
 pList = c(20, 30, 50, 80); nList = c(20, 50, 100, 200); 
-# pList = c(20, 30, 50, 80); nList = c(20, 50, 100); 
+pList = c(20, 30, 50); nList = c(20, 50, 100);
 Parms = AUCall = ARIall = c()
 # Merge results
 for(p in pList){
@@ -23,8 +23,8 @@ for(p in pList){
       
       # Results
       K = Ktrue
-      ARI = matrix(0, nbSim, 5); colnames(ARI) = c('Oracle', 'vemMB', 'vemGlasso', 'vemTree', 'vemBMTree')
-      AUC = matrix(0, nbSim, 7); colnames(AUC) = c('MB', 'vemMB', 'Glasso', 'vemGlasso', 'Tree', 'vemTree', 'vemBMTree')
+      ARI = matrix(0, nbSim, 5); colnames(ARI) = c('Oracle', 'vemMB', 'vemGlasso', 'vemTree', 'vemMBTree')
+      AUC = matrix(0, nbSim, 7); colnames(AUC) = c('MB', 'vemMB', 'Glasso', 'vemGlasso', 'Tree', 'vemTree', 'vemMBTree')
       lastSim = 0
       for(sim in 1:nbSim){
          simLabel = paste0('simul-K', K, '-s', sim); print(paste0(simParms, simLabel))
@@ -39,9 +39,9 @@ for(p in pList){
                # adjustedRandIndex(Ztrue, apply(simRes$vemLogMB$tau, 1, which.max)), 
                adjustedRandIndex(Ztrue, apply(simRes$vemGlasso$tau, 1, which.max)), 
                # adjustedRandIndex(Ztrue, apply(simRes$vemLogGlasso$tau, 1, which.max)), 
-               adjustedRandIndex(Ztrue, apply(simRes$vemTree$tau, 1, which.max))
+               adjustedRandIndex(Ztrue, apply(simRes$vemTree$tau, 1, which.max)),
                # adjustedRandIndex(Ztrue, apply(simRes$vemLogitTree$tau, 1, which.max))
-               adjustedRandIndex(Ztrue, apply(simRes$vemBMTree$tau, 1, which.max))
+               adjustedRandIndex(Ztrue, apply(simRes$vemMBTree$tau, 1, which.max))
                # adjustedRandIndex(Ztrue, apply(simRes$vemLogitTree$tau, 1, which.max))
             )
             # AUC
@@ -54,9 +54,8 @@ for(p in pList){
                performance(prediction(simRes$vemGlasso$Psi1, Gvec), "auc")@y.values[1][[1]],
                # performance(prediction(simRes$vemLogGlasso$Psi1, Gvec), "auc")@y.values[1][[1]],
                performance(prediction(mat_vect_low(simRes$scoreTree), Gvec), "auc")@y.values[1][[1]], 
-               performance(prediction(simRes$vemTree$Psi1, Gvec), "auc")@y.values[1][[1]]
+               performance(prediction(simRes$vemTree$Psi1, Gvec), "auc")@y.values[1][[1]],
                # performance(prediction(simRes$vemLogitTree$Psi1, Gvec), "auc")@y.values[1][[1]]
-               performance(prediction(mat_vect_low(simRes$scoreMBTree), Gvec), "auc")@y.values[1][[1]], 
                performance(prediction(simRes$vemMBTree$Psi1, Gvec), "auc")@y.values[1][[1]]
                # performance(prediction(simRes$vemLogitMBTree$Psi1, Gvec), "auc")@y.values[1][[1]]
             )

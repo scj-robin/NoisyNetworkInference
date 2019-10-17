@@ -8,6 +8,7 @@ source('Functions/BasicFunctions.R')
 source('Functions/SimulFunctions.R')
 source('Functions/ResultFunctions.R')
 source('Functions/VEMFunctions.R')
+source('Functions/VEMmultiFunctions.R')
 
 # Dirs
 dataDir = '../Data/'
@@ -162,6 +163,14 @@ if(!file.exists(paste0(dataDir, dataName, '-vemTreeAll.Rdata'))){
    vemTreeAll = list(); for(K in 1:Kmax){cat('\n', K, ':'); vemTreeAll[[K]] = VEM(S=scoreTreeAll, K, explorFact=3)}
    save(scoreTreeAll, vemTreeAll, file=paste0(dataDir, dataName, '-vemTreeAll.Rdata'))
 }else{load(paste0(dataDir, dataName, '-vemTreeAll.Rdata'))}
+
+# Scores Glasso-Tree all
+if(!file.exists(paste0(dataDir, dataName, '-vemGlassoTreeAll.Rdata'))){
+   scoreMat = cbind(mat_vect_low(scoreGlassoAll), mat_vect_low(scoreTreeAll))
+   vemGlassoTreeAll = list(); 
+   for(K in 1:Kmax){cat('\n', K, ':'); vemGlassoTreeAll[[K]] = VEMmulti(S=scoreMat, K, explorFact=3)}
+   save(vemGlassoTreeAll, file=paste0(dataDir, dataName, '-vemGlassoTreeAll.Rdata'))
+}else{load(paste0(dataDir, dataName, '-vemGlassoTreeAll.Rdata'))}
 
 ###############################################################################   
 # Model selection

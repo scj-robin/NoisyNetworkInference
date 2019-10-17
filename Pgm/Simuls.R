@@ -100,7 +100,7 @@ for(p in pList){
             }
             cat('MB-Glasso-Tree ')
             if(!is.element("vemMBGlassoTree", names(simRes))){
-               Smat = cbind(mat_vect_low(simRes$scoreMB), mat_vect_low(simRes$scoreGlasso), 
+               Smat = cbind(mat_vect_low(simRes$scoreMB), mat_vect_low(simRes$scoreGlasso),
                             mat_vect_low(simRes$scoreGlasso))
                cat('\n', simLabel, 'MB-Glasso-Tree:'); vemMBGlassoTree = VEMmulti(Smat, K)
                simRes$vemMBGlassoTree = vemMBGlassoTree

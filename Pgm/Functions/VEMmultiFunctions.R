@@ -14,15 +14,15 @@ VEMmulti <- function(Smat, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, ver
    ##############################################################################  
    #initialisation des paramètres eta et G (G a deux classes arete ou pas)
    param_gm <- Mclust(mat_S, G=2, verbose=FALSE) 
-   eta_init <- param_gm$z
+   Psi_init <- param_gm$z
    g_init <- param_gm$classification-1
    mean_by_class <- t(param_gm$parameters$mean)
    if(mean(mean_by_class[1, ]) > mean(mean_by_class[2, ])){
       mean_by_class <- mean_by_class[c(2, 1), ]
       g_init = 1 - g_init
    }
-   eta0 <- array(rep(eta_init[,1],K*K),c(N,K,K)) #ok
-   eta1 <- array(rep(eta_init[,2],K*K),c(N,K,K)) 
+   eta0 <- array(rep(Psi_init[,1],K*K),c(N,K,K)) #ok
+   eta1 <- array(rep(Psi_init[,2],K*K),c(N,K,K)) 
    
    #initialisation des tau et  Pi comme la moyenne des tau de chaque classe
    param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), 

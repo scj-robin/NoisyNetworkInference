@@ -7,7 +7,7 @@
 ##########################################################################
 # Inference du model SBM avec melange par VEM
 VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FALSE, explorFact=1.5){
-   # niter=100; epsilon_tau=1e-4; epsilon_eta = 1e-4; verbose = FALSE
+   # niter=100; epsilon_tau=1e-4; epsilon_eta = 1e-4; verbose = FALSE; explorFact=1.5
   
 ##########################################################################
 #gere les Scores d'entrées matrice ou vecteur et les rend en vecteur
@@ -33,18 +33,18 @@ VEM <- function(S, K, niter=100, epsilon_tau=1e-4, epsilon_eta=1e-4, verbose=FAL
   
   #initialisation des paramètres eta et G (G a deux classes arete ou pas)
   param_gm <- Mclust(vec_S, G=2, verbose=FALSE) 
-  eta_init<- param_gm$z
+  Psi_init<- param_gm$z
   g_init <- param_gm$classification-1
   
   #par la moyenne reclassement des scores avec et sans aretes
   mean_by_class <- vapply(0:1,function(g){mean(vec_S[g_init==g])},1)
   if(mean_by_class[2]  < mean_by_class[1] ) { 
-    eta_init <- eta_init[,c(2,1)]
+    Psi_init <- Psi_init[,c(2,1)]
     g_init <- 1 - g_init
   }
 
-  eta0 <- array(rep(eta_init[,1],K*K),c(N,K,K)) #ok
-  eta1 <- array(rep(eta_init[,2],K*K),c(N,K,K)) 
+  eta0 <- array(rep(Psi_init[,1],K*K),c(N,K,K)) #ok
+  eta1 <- array(rep(Psi_init[,2],K*K),c(N,K,K)) 
   
   #initialisation des tau et  Pi comme la moyenne des tau de chaque classe
   param_sbm <- BM_bernoulli(membership_type="SBM_sym", adj=vect_mat_low( g_init), 
