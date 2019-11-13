@@ -1,0 +1,108 @@
+%!TEX root = VEMScoreEdges.tex
+
+
+
+\subsection{Review of the literature}
+Notes on identifiability based on papers : 
+
+\begin{itemize}
+\item \cite{AMR09} : "Allman, Elizabeth S. and Matias, Catherine and Rhodes, John A." : \emph{Identifiability of parameters in latent structure models with many observed variables}
+\item \cite{AMR10} "Allman, Elizabeth S. and Matias, Catherine and Rhodes, John A." :  \emph{Parameter identifiability in a class of random graph mixture models}
+\item \cite{T63}"Teicher, Henry":    \emph{Identifiability of Finite Mixtures}
+\item \cite{T67} "Teicher, Henry":    \emph{Identifiability of Mixtures of product measures}
+\end{itemize}
+
+\vspace{2em}
+
+
+\paragraph{What is done in    \cite{AMR10}}: identifiability in weighted SBM 
+\begin{eqnarray*}
+S_{ij} | Z_i =k ,Z_j = \ell &\sim& \mu_{k\ell}\\
+  \mu_{k\ell} &=& (1-\gamma_{k\ell})  \delta_ {\{0\}} + + \gamma_{kl} F_{k\ell}( \cdot)
+\end{eqnarray*}
+ for \underline{uni dimensional $S$ and symmetric}  with 
+\begin{itemize} 
+\item \underline{ $ F_{k\ell}( \cdot)$ parametric} (Theorem 12 of \cite{AMR10})  : $ F( \cdot; \theta_{k\ell})$ under the following assumptions: 
+\begin{enumerate}
+\item[[A1]]  The $K(K+1)/2$ parameter values $\theta_{k\ell}$ are distinct
+\item[[A2]]  The family of measures $\Mcal = \{ F( \cdot; \theta) | \theta\in\Theta\}$  is such that 
+\begin{itemize}
+\item[[A2](i)] all elements of $\Mcal$ have no point mass at $0$ 
+\item[[A2](ii)] the parameters of finite mixtures of  measures of $\Mcal$ are identifiable (up to label switching) i.e.
+$$ \sum_{m=1}^M \alpha_m F(\cdots, \theta_m) =  \sum_{m=1}^M \alpha'_m F(\cdots, \theta'_m) \Rightarrow  \sum_{m=1}^M \alpha_m \delta_{\theta_m} =  \sum_{m=1}^M \alpha'_m \delta_{\theta'_m} $$ 
+\end{itemize}
+
+In particular : true for Gaussian (\cite{T63}) and Laplace. 
+\end{enumerate}
+\item \underline{ $ F_{k\ell}( \cdot)$ non-parametric} (Theorem 14 of \cite{AMR10}) : if the $\mu_{k \ell}$ are \emph{linearly independent} (to be detailed)
+\end{itemize}
+
+
+\paragraph{About the demonstrations} 
+
+\begin{itemize}
+\item  \emph{Parametric case}  It is done from the distribution of a triplet ($S_{ij},S_{ik}, S_{jk}$) and using \cite{T63}. How to adapt it  to our case? %because only relies on \cite{T63} and then it is really simple. 
+\item  \emph{Nonparametric case} : only depends on the linear independancy of the $\mu_{k\ell}$. We have to precise it for our case? 
+\end{itemize}
+
+
+\subsection{Proof in the parametric uni-dimensional context}
+
+I tried to mimic/extend the proof of \cite{AMR10}  but I don't think we are in the same scope.  
+
+\paragraph{Distribution of the $S_{ij}$}
+
+ \begin{align*}
+ \mathbb{P}(S_{ij}) &= \sum_{q,\ell} \pi_{q} \pi_{\ell} [ (1-\gamma_{q\ell})F_0(S_{ij}) + \gamma_{q\ell} F_1(S_{ij} )]\\
+&= \left[1-  \sum_{q, \ell}  \pi_\ell \pi_q  \gamma_{q,\ell} \right] F_{0}(S_{ij}) +   \left[ \sum_{q, \ell}  \pi_q \pi_\ell    \gamma_{q,\ell} \right] F_{1}(S_{ij})\\
+ \end{align*}
+So \textbf{assuming that $F_0$ and $F_1$ are such that any mixture of those two distributions is identifiable}, we obtain the identifiability of $\theta_0$, $\theta_1$ and $ \sum_{q, \ell}  \pi_{\ell} \pi_q   \gamma_{q,\ell}$. 
+
+
+So we have identifiability of $\pi'  \gamma  \pi$. 
+It seems to me that once we have identified $\theta_0$ and $\theta_1$ we will be able to apply to proof of Célisse \& al. \cite{CDP12}, which is the one I know better. Which is the thing you said : meaning that once we have identified to high level, we are identifiable just like any binary SBM. 
+
+
+
+
+
+
+
+%\paragraph{Distribution of the triplet  ($S_{ij},S_{ik}, S_{jk}$)}
+%
+% \begin{align*}
+% \mathbb{P}(S_{ij},S_{ik}, S_{jk}) &= \sum_{q,\ell,m} \pi_{q} \pi_{\ell} \pi_{m} [ (1-\gamma_{q\ell})F_0(S_{ij}) + \gamma_{q\ell} F_1(S_{ij} )] [(1-\gamma_{qm})F_0(S_{ik}) + \gamma_{qm} F_1(S_{ik})]\\
+%&   [ (1-\gamma_{\ell m})F_0(S_{jk}) + \gamma_{\ell m} F_1(S_{jk})]\\
+%&= \sum_{q, \ell,m} \sum_{(u,v,w) \in \{0,1\}^3}  \eta_{q,\ell,m,u,v} F_{u}(S_{ij}) F_{v}(S_{ik}) F_{w}(S_{jk})\\
+%&= \sum_{(u,v,w) \in \{0,1\}^3}  \left(\sum_{q, \ell,m} \eta_{q,\ell,m,u,v}\right) F_{u}(S_{ij}) F_{v}(S_{ik}) F_{w}(S_{jk})\\
+%&=  \sum_{(u,v,w) \in \{0,1\}^3}  \left(\sum_{q, \ell,m} \eta_{q,\ell,m,u,v}\right) F_{u,v,w}(S_{ij},S_{ik},S_{jk})
+%\end{align*}
+%with $$\eta_{q,\ell,m,u,v} = \pi_{q} \pi_{\ell} \pi_{m} (1 - \gamma_{q\ell})^{1-u}   \gamma_{q\ell} ^{u}  (1 - \gamma_{q\ell})^{1-u}   \gamma_{q\ell} ^{u}  (1 - \gamma_{qm})^{1-v}   \gamma_{qm} ^{v} (1 - \gamma_{\ell m })^{1-w}   \gamma_{\ell m } ^{w}.$$  \\
+%The distribution of $(S_{ij},S_{ik}, S_{jk})$ is a mixture  (weights  = $ \sum_{q, \ell,m} \eta_{q,\ell,m,u,v}$) of   the following distributions 
+%$$ F (s) =  F_u(s_1,\theta_u) F_v(s_1,\theta_v)  F_w(s_1,\theta_w) $$ 
+% where $F \in \Fcal$   with 
+%$$ \Fcal  = \{ F (s; \theta_0, \theta_1)  :  F (s; \theta_0, \theta_1)  = F_u(s_1,\theta_u),F_v(s_2,\theta_v) F_w(s_3,\theta_w) , (u,v,w) \in \{0,1\}^3,  \theta_0, \in \Theta_0, \theta_1 \in \Theta_1\}$$
+% 
+% 
+%\noindent \textbf{Asumptions};  
+% \noindent  [A1]  we assume that any mixtures of elements of $\Fcal$ is identifiable.  (to develop to get assumptions on $F_0$ and $F_1$). 
+%
+% 
+%
+%The, under assumption [A1], we have : 
+%
+%
+%
+%Then using Theorem 1 of \cite{T67} we have the identifiability of any mixture of the  product  measures. 
+%
+
+
+
+
+
+
+
+
+
+
+
