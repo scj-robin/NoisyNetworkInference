@@ -1,0 +1,37 @@
+\begin{thebibliography}{1}
+
+\bibitem{AMR09}
+Elizabeth~S. Allman, Catherine Matias, and John~A. Rhodes.
+\newblock Identifiability of parameters in latent structure models with many
+  observed variables.
+\newblock {\em Ann. Statist.}, 37(6A):3099--3132, 12 2009.
+
+\bibitem{AMR10}
+Elizabeth~S. {Allman}, Catherine {Matias}, and John~A. {Rhodes}.
+\newblock {Parameter identifiability in a class of random graph mixture
+  models}.
+\newblock {\em arXiv e-prints}, page arXiv:1006.0826, Jun 2010.
+
+\bibitem{CDP12}
+Alain Celisse, Jean-Jacques Daudin, and Laurent Pierre.
+\newblock Consistency of maximum-likelihood and variational estimators in the
+  stochastic block model.
+\newblock {\em Electron. J. Statist.}, 6:1847--1899, 2012.
+
+\bibitem{GCR16}
+E.~Gassiat, A.~Cleynen, and S.~Robin.
+\newblock Inference in finite state space non parametric hidden {M}arkov models
+  and applications.
+\newblock {\em Statistics and Computing}, 26(1-2):61--71, 2016.
+
+\bibitem{T63}
+Henry Teicher.
+\newblock Identifiability of finite mixtures.
+\newblock {\em Ann. Math. Statist.}, 34(4):1265--1269, 12 1963.
+
+\bibitem{T67}
+Henry Teicher.
+\newblock Identifiability of mixtures of product measures.
+\newblock {\em The Annals of Mathematical Statistics}, 38(4):1300--1302, 1967.
+
+\end{thebibliography}
