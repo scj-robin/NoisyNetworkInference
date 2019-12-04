@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.9.8)  20 NOV 2019 14:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (MiKTeX 2.9.6210 64-bit) (preloaded format=pdflatex 2017.9.8)  4 DEC 2019 23:51
 entering extended mode
 **./VEMScoreEdges.tex
 (VEMScoreEdges.tex
@@ -676,47 +676,62 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Inference.tex [4]) [5] (Identifiability.tex
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
- [6]) [7] (Simuls.tex) [8]
-(Examples.tex) (VEMScoreEdges.bbl) [9] (Appendix.tex)
+ [6] [7] [8]
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no © in font cmr10!
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no ¨ in font cmr10!
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no § in font cmr10!
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no ® in font cmr10!
+Missing character: There is no Ã in font cmr10!
+Missing character: There is no ª in font cmr10!
+) [9] (Simuls.tex)
+[10] (Examples.tex) (VEMScoreEdges.bbl) [11] (Appendix.tex)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 70.
- [10]
+ [12]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 70.
- (VEMScoreEdges.aux)
+
+(VEMScoreEdges.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 70.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 70.
 Package rerunfilecheck Info: File `VEMScoreEdges.out' has not changed.
-(rerunfilecheck)             Checksum: 34480B4E0705FBBD84EC69AA2050F3BE;793.
+(rerunfilecheck)             Checksum: 4C613275F3A07CC94E1D99506720810E;867.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 70.
  ) 
 Here is how much of TeX's memory you used:
- 7425 strings out of 493333
- 101919 string characters out of 3139192
- 201348 words of memory out of 3000000
- 10781 multiletter control sequences out of 15000+200000
+ 7437 strings out of 493333
+ 102054 string characters out of 3139192
+ 201396 words of memory out of 3000000
+ 10785 multiletter control sequences out of 15000+200000
  18128 words of font info for 64 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,18n,35p,359b,336s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 28i,18n,35p,504b,342s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\Donnet\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\public\mathabx\dpi
-600\matha5.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\public
-\mathabx\dpi600\matha7.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2.9\fonts\pk\l
-jfour\public\mathabx\dpi600\mathx10.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2
-.9\fonts\pk\ljfour\public\mathabx\dpi600\matha10.pk><C:/Program Files/MiKTeX 2.
-9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9/fonts/
-type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/ams
-fonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb
-><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Prog
-ram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files
-/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.
-9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
-ic/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfo
-nts/symbols/msam7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
-symbols/msbm10.pfb>
-Output written on VEMScoreEdges.pdf (10 pages, 229781 bytes).
+600\mathb10.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2.9\fonts\pk\ljfour\publi
+c\mathabx\dpi600\matha5.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2.9\fonts\pk\
+ljfour\public\mathabx\dpi600\matha7.pk> <C:\Users\Donnet\AppData\Local\MiKTeX\2
+.9\fonts\pk\ljfour\public\mathabx\dpi600\mathx10.pk> <C:\Users\Donnet\AppData\L
+ocal\MiKTeX\2.9\fonts\pk\ljfour\public\mathabx\dpi600\matha10.pk><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
+/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12
+.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/
+Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fon
+ts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
+/public/amsfonts/symbols/msam7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pub
+lic/amsfonts/symbols/msbm10.pfb>
+Output written on VEMScoreEdges.pdf (12 pages, 244900 bytes).
 PDF statistics:
- 288 PDF objects out of 1000 (max. 8388607)
- 53 named destinations out of 1000 (max. 500000)
- 105 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 323 PDF objects out of 1000 (max. 8388607)
+ 61 named destinations out of 1000 (max. 500000)
+ 113 words of extra memory for PDF output out of 10000 (max. 10000000)
 
