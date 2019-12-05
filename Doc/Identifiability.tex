@@ -171,8 +171,12 @@ $$B(t)  = \frac{ \gamma_{k\ell}  -  \gamma_{k'\ell'} }{  \gamma'_{k\ell}-\gamma'
 $$ 
  
  So $B(t)$ is a constant function: 
- $B(t) = \frac{\Delta'(t)}{\Delta(t)} = \frac{F_1(t) - F_0(t)}{F'_1(t) - F'_0(t)}  = B$
- and $B>0$
+ $B(t) = \frac{\Delta'(t)}{\Delta(t)} = \frac{F'_1(t) - F'_0(t)}{F_1(t) - F_0(t)}  = B$
+ and $B>0$. 
+ 
+ Moreover we get $$  \gamma_{k\ell}  -  \gamma_{k'\ell'}  = B ( \gamma'_{k\ell}  -  \gamma'_{k'\ell'}),\quad  \forall (k,\ell,k',\ell').$$ 
+  
+ 
 Hence 
  $$ F_1(t) - F_0(t) = B (F'_1(t) - F'_0(t))$$
  So 
@@ -199,17 +203,35 @@ As a consequence,
  F_1(t) &=&(1- B(1-A)) F'_0(t) + B(1-A)F'_1(t)\\
  F_0(t) &= &B F'_0(t) + (1- B(1-A)) F'_0(t) +B(1-A)F'_1(t) - BF'_1(t)\\
  &=& (1- B(1-A)+B)F'_0(t) -AB F'_1(t)\\
- &=& (1 + AB)F'_0(t) -  AB F'_1(t)
+ &=& (1 + AB)F'_0(t) -  AB F'_1(t)\\
+ &=& F'_0(t)  - AB( F'_1(t) -  F'_0(t)) \\
+ F_0(t) - F'_0(t)&=&  AB( F'_0(t) -  F'_1(t)) 
   \end{eqnarray*}
 
  
 
 
-\textcolor{red}{A FINIR} : il va falloir jouer sur le support des $F_1$ et $F_0$. Par exemple si on suppose que  $F_0(t) = F'_0(t) = 0 $ pour un certain $t$ (donc support de $F_0$ borné inférieurement) 
-Alors $AB F'_1(t) = 0$ pour ces $t$ mais $F_1(t) > F_0(t) =0 $ donc $A=0$ ou $B=0$. Mais $B>0$ donc $A = 0$ donc $F'_0(t) = F_0(t)$. Donc $F_1(t) = F'_1(t)$ et on a fini.... 
+\textcolor{red}{A FINIR} : il va falloir jouer sur le support des $F_1$ et $F_0$. 
 
-Mais c'est fort comme hypothèse. Et surtout ça me paraît contre intuitif???? 
- 
+
+%\begin{itemize}
+%\item Par exemple si on suppose que  $F_0(t) = F'_0(t) = 0 $ pour un certain $t$ (donc support de $F_0$ borné inférieurement) 
+%Alors $AB F'_1(t) = 0$ pour ces $t$ mais $F_1(t) > F_0(t) =0 $ donc $A=0$ ou $B=0$. Mais $B>0$ donc $A = 0$ donc $F'_0(t) = F_0(t)$. Donc $F_1(t) = F'_1(t)$ et on a fini.... 
+%
+%Mais c'est fort comme hypothèse. Et surtout ça me paraît contre intuitif???? \\
+%\textcolor{red}{En fait : }
+
+On a $F_1(t) < F_0(t)$ si on veut que en moyenne les valeurs sous $F_1$ soient plus grandes que celles sous $F_0$. 
+
+
+ Si il existe  $\tau$ tel que $F_0(\tau) = 1 = F_0'(\tau)$ alors en ce point, 
+  $ 1 = 1 - AB (F'_1(\tau) - F'_0(\tau))$ donc  $ AB (F'_1(\tau)-1)$; 
+  Or  $F'_1(\tau) < F'_0(\tau)$ donc $AB = 0$. Or $B>0$ donc $A = 0$ Donc $F_0'(t) = F_0(t)$. \\
+  
+  
+  
+
+   
 On peut peut-être seulement mettre des vitesses sur les queues de distributions et travailler en limite? 
 
 
