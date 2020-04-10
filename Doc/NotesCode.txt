@@ -1,0 +1,34 @@
+NoisySBM <- (scoreList)
+    scoreList = liste de d matrice n * n
+    N = nombre de diades
+
+InitSBM <- (scoreMat) : SD
+    mclust à 2 classes sur scoreMat
+    blockmodel sur classif 0/1 issue de mclust
+    -> psiInit = vecteur N * 2
+    -> tauInit = liste de Kmax matrices n * K 
+    -> etaInit = liste de Kmax array N * K * K
+
+********************************************************************************
+Pour un K donné
+psi : N * 2; tau : n * K; eta : N * K * K
+
+Mstep <- (scoreMat, psi, tau, eta) 
+    -> theta = list(pi, gamma, mu0, mu1, Sigma0, Sigma1)
+
+VEstep <- (scoreMat, theta) : SR
+    calcul de phi = matrice N * 2
+    calcul des A = array n * n * K * K
+    -> eta, tau, psi
+
+lowerBound <- (scoreMat, theta, eta, tau, psi) 
+
+
+********************************************************************************
+Utilitaires
+
+scoreList2scoreMat
+scoreList2scoreArray
+
+
+
