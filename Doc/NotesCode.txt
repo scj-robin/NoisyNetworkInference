@@ -28,7 +28,10 @@ lowerBound <- (scoreMat, theta, eta, tau, psi)
 Utilitaires
 
 scoreList2scoreMat
+
 scoreList2scoreArray
+
+extractScoreGlasso
 
 
 
