@@ -43,7 +43,8 @@ Still, the conditional entropy of $q(G \mid Z)$ contributes to the lower bound.
  = & \log p_\theta(S) - KL(q(Z, G) ; p(Z, G \mid S)) \nonumber \\
  = & \Esp_q \log p_\theta(Z, G, S) + H(q(Z))  + \Esp_q H(q(G \mid Z)) \\ 
  = & \sum_{i, k} \tau_{ik} \log \pi_k 
- + \sum_{i < j} \left(\etabar_{ij} \log \gamma_{k\ell} + (1 - \etabar_{ij}) \log (1 - \gamma_{k\ell})\right) \nonumber \\
+%  + \sum_{i < j} \left(\etabar_{ij} \log \gamma_{k\ell} + (1 - \etabar_{ij}) \log (1 - \gamma_{k\ell})\right) \nonumber \\
+ + \textcolor{red}{\sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left(\eta^{k\ell}_{ij} \log \gamma_{k\ell} + (1 - \eta^{k\ell}_{ij}) \log (1 - \gamma_{k\ell})\right)} \nonumber \\
  & + \sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left(\eta^{k\ell}_{ij} \log f_1(S_{ij}) + (1 - \eta^{k\ell}_{ij}) \log f_0(S_{ij})\right) \nonumber \\
  & - \sum_{i, k} \tau_{ik} \log \tau_{ik} - \sum_{i< j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left( \eta^{k\ell}_{ij} \log \eta^{k\ell}_{ij} + (1 - \eta^{k\ell}_{ij}) \log (1 - \eta^{k\ell}_{ij}) \right)
 \end{align}
