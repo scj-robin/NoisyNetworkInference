@@ -10,27 +10,28 @@
 \contentsline {paragraph}{Log-likelihood}{4}{section*.6}
 \contentsline {paragraph}{Approximate distribution $q(Z, G) \approx p(Z, G \mid S)$}{4}{section*.7}
 \contentsline {paragraph}{Divergence $KL(q(Z, G) ; p(Z, G \mid S))$}{4}{section*.8}
-\contentsline {paragraph}{Lower bound $J(\theta , q)$}{4}{section*.9}
+\contentsline {paragraph}{Entropy}{4}{section*.9}
+\contentsline {paragraph}{Lower bound $J(\theta , q)$}{4}{section*.10}
 \contentsline {subsection}{\numberline {3.2}Estimation equation}{4}{subsection.3.2}
-\contentsline {paragraph}{VE step}{4}{section*.10}
-\contentsline {paragraph}{M step}{5}{section*.11}
-\contentsline {paragraph}{By-product}{5}{section*.12}
-\contentsline {section}{\numberline {4}Identifiability}{6}{section.4}
-\contentsline {subsection}{\numberline {4.1}Review of the literature}{6}{subsection.4.1}
-\contentsline {paragraph}{What is done in \cite {AMR10}}{6}{section*.13}
-\contentsline {paragraph}{About the demonstrations}{6}{section*.14}
-\contentsline {subsection}{\numberline {4.2}Proof in the parametric uni-dimensional context}{6}{subsection.4.2}
-\contentsline {paragraph}{Distribution of the $S_{ij}$}{6}{section*.15}
-\contentsline {paragraph}{Distribution of the triplet ($S_{ij},S_{ik}, S_{jk}$)}{7}{section*.16}
-\contentsline {subsection}{\numberline {4.3}Notes from the 20/11/19}{7}{subsection.4.3}
-\contentsline {paragraph}{Preliminary remarks.}{7}{section*.17}
-\contentsline {paragraph}{Parametric case}{7}{section*.18}
-\contentsline {paragraph}{Non-parametric case}{8}{section*.19}
-\contentsline {section}{\numberline {5}Simulation study}{10}{section.5}
-\contentsline {subsection}{\numberline {5.1}Simulation design}{10}{subsection.5.1}
-\contentsline {paragraph}{Data simulation.}{10}{section*.20}
-\contentsline {paragraph}{Inference methods.}{10}{section*.21}
-\contentsline {section}{\numberline {6}Illustrations}{11}{section.6}
-\contentsline {section}{\numberline {A}Appendix}{12}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Non-parametric emission distributions}{12}{subsection.A.1}
-\contentsline {paragraph}{Non-parametric estimates.}{12}{section*.23}
+\contentsline {paragraph}{VE step}{5}{section*.12}
+\contentsline {paragraph}{M step}{6}{section*.13}
+\contentsline {paragraph}{By-product}{6}{section*.14}
+\contentsline {section}{\numberline {4}Identifiability}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Review of the literature}{7}{subsection.4.1}
+\contentsline {paragraph}{What is done in \cite {AMR10}}{7}{section*.15}
+\contentsline {paragraph}{About the demonstrations}{7}{section*.16}
+\contentsline {subsection}{\numberline {4.2}Proof in the parametric uni-dimensional context}{7}{subsection.4.2}
+\contentsline {paragraph}{Distribution of the $S_{ij}$}{7}{section*.17}
+\contentsline {paragraph}{Distribution of the triplet ($S_{ij},S_{ik}, S_{jk}$)}{8}{section*.18}
+\contentsline {subsection}{\numberline {4.3}Notes from the 20/11/19}{8}{subsection.4.3}
+\contentsline {paragraph}{Preliminary remarks.}{8}{section*.19}
+\contentsline {paragraph}{Parametric case}{8}{section*.20}
+\contentsline {paragraph}{Non-parametric case}{9}{section*.21}
+\contentsline {section}{\numberline {5}Simulation study}{11}{section.5}
+\contentsline {subsection}{\numberline {5.1}Simulation design}{11}{subsection.5.1}
+\contentsline {paragraph}{Data simulation.}{11}{section*.22}
+\contentsline {paragraph}{Inference methods.}{11}{section*.23}
+\contentsline {section}{\numberline {6}Illustrations}{12}{section.6}
+\contentsline {section}{\numberline {A}Appendix}{13}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Non-parametric emission distributions}{13}{subsection.A.1}
+\contentsline {paragraph}{Non-parametric estimates.}{13}{section*.25}

@@ -1,3 +1,5 @@
+% !TEX root =VEMScoreEdges.tex
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Loss function}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,6 +38,14 @@ KL(q(Z, G) ; p(Z, G \mid S))
 \end{align*}
 Still, the conditional entropy of $q(G \mid Z)$ contributes to the lower bound.
 
+
+ 
+\paragraph{Entropy}
+
+\begin{align}\label{eq:entropy}
+\mathcal{H}(q(G,Z)) = &   \Esp_{q(Z)}[\mathcal{H}p(G| Z,Y)] + \mathcal{H}(q(Z))\\
+=&  - \sum_{i,k} \tau_{ik} \log \tau_{ik}  - \sum_{ijk\ell} \tau_{ik} \tau_{j\ell}\left[\eta_{ij}^{k\ell} \log ( \eta_{ij}^{k\ell} ) +   (-1 \eta_{ij}^{k\ell}) \log(1-\eta_{ij}^{k\ell})\right]
+\end{align}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{Lower bound $J(\theta, q)$}
 \begin{align} \label{eq:lowerBound}
@@ -49,16 +59,91 @@ Still, the conditional entropy of $q(G \mid Z)$ contributes to the lower bound.
  & - \sum_{i, k} \tau_{ik} \log \tau_{ik} - \sum_{i< j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \left( \eta^{k\ell}_{ij} \log \eta^{k\ell}_{ij} + (1 - \eta^{k\ell}_{ij}) \log (1 - \eta^{k\ell}_{ij}) \right)
 \end{align}
 
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Estimation equation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\color{red}
+We set
+$$q_{\tau,\eta}(Z,G) = \prod_{i=1}^n \prod_{k=1}^K \tau_{ik}^{Z_{ik}} \prod_{i<j} \prod_{k,\ell} \eta_{ijk\ell}^{Z_{ik}Z_{j\ell}G_{ij}} (1- \eta_{ijk \ell})^{Z_{ik}Z_{j \ell}(1-G_{ij})}$$
+where 
+$\eta_{ijkl} = P_q(G_{ij}=1 | Z_i = k, Z_j = \ell)$ 
+We define   
+  \begin{eqnarray*}
+  J(\theta,q_{\tau,\eta}) &=&  \log p_\theta(S) - KL(q_{\tau,\eta}(Z, G) ; p_\theta(Z, G \mid S)) \\
+  &=&    \Esp_{q_{\tau,\eta}}[\log p_\theta(Z, G, S)]+ \Hcal(q_\tau(Z))  + \Esp_{q_\tau} \Hcal(q_\eta(G \mid Z))
+  \end{eqnarray*}
+  
+  
+  \vspace{2em}
+  
+Iteration $(t)$ the EM is as follows: from a current value of $\theta^{(t-1)}$
+
+\begin{itemize}
+\item \emph{(V)E-step}  $$(\tau^{(t)}, \eta^{(t)}) = \argmax_{\tau,\eta} J(\theta^{(t-1)},q_{\tau,\eta})$$
+\item \emph{M-step}  $$ \theta^{(t)} = \argmax_{\theta} J(\theta,q_{\tau^{(t)}, \eta^{(t)}})$$
+\end{itemize}
+
+
+
+
+\color{black}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{VE step}
+
+
+\color{red}
+\begin{eqnarray*}
+(\hat{\tau},\hat{\eta}) &=& \argmax_{\tau,\eta} J(\theta,q_{\tau,\eta}) \\
+&=&  \argmin_{\tau,\eta}KL(q_{\tau,\eta}(Z, G) ; p_\theta(Z, G \mid S)) \\
+&=&\argmin_{\tau,\eta} \left\{ KL(q_\tau (Z); p_\theta(Z \mid S)) 
++ \Esp_{q_\tau(Z)}  \left[KL(q_\eta(G \mid Z, S); p_\theta(G \mid Z, S))\right] \right\}
+\end{eqnarray*}
+
+\begin{itemize}
+\item[$\bullet$] So from the previous equation, we have
+\begin{equation}\label{eq:def_eta}
+ \hat{\eta} = \argmin_{\eta} \Esp_{q_\tau(Z)}  \left[KL(q_\eta(G \mid Z, S); p_\theta(G \mid Z, S)) \right] 
+ \end{equation}
+ Using the independencies, we have
+ 
+ \begin{equation}\label{eq:def_etaijkl}
+ \hat{\eta}_{ij\cdot \cdot} = \argmin_{\eta_{ij \cdot \cdot}} \Esp_{q_\tau(Z)}  KL(q_\eta(G_{ij} \mid Z_{i},Z_j); p_\theta(G_{ij}  \mid Z_i,Z_j, S_{ij})) 
+ \end{equation}
+ $KL(q_\eta(G_{ij} \mid Z_i,Z_j); p_\theta(G_{ij} \mid Z_i,Z_j, S_{ij})) $ is minimal  ($=0$) for $$ \eta_{ijk\ell} = P_\theta(G_{ij} = 1 | Z_i=k, Z_j=l,S_{ij})  = \eta^{k\ell}_{ij}$$
+Morover, for $i,j,k,l$
+$$P_\theta(G_{ij} = 1 | Z_i=k , Z_j=l,S_{ij}) =  \frac{\gamma_{k\ell} f_1(S_{ij})}{\gamma_{k\ell} f_1(S_{ij}) + (1 - \gamma_{k\ell}) f_0(S_{ij})}$$
+
+In that case $$KL(q_\eta(G \mid Z); p(G \mid Z, S)) = 0$$ and so $$\Esp_{q_\tau(Z)}\left[  KL(q_\eta(G_{ij} \mid Z_{i},Z_j, S_{ij}); p_\theta(G_{ij}  \mid Z_i,Z_j, S))\right] =0$$ (minimal)
+It does not depend on $\tau$. 
+\underline{So it can be done before optimizing in $\tau$}.
+\item[$\bullet$] Now for fixed $\eta$ we will minimize $J(\theta,q_{\tau,\eta})$ by a fixed point equation. 
+\end{itemize}
+
+ 
+
+
+
+
+
+
+\color{black}
+
+
 Denoting 
 $$
-\log A_{ijk\ell} = \eta^{k\ell}_{ij} \left(\log \gamma_{k\ell} + \log f_1(S_{ij})\right) + (1 - \eta^{k\ell}_{ij}) \left(\log (1 - \gamma_{k\ell}) + \log f_0(S_{ij}) \right)
+\log A_{ijk\ell} = \eta^{k\ell}_{ij} \left(\log \gamma_{k\ell} + \log f_1(S_{ij}) -  \color{red}\log \eta^{k\ell}_{ij} \color{black}\right) + (1 - \eta^{k\ell}_{ij}) \left(\log (1 - \gamma_{k\ell}) + \log f_0(S_{ij})  -  \color{red}\log (1- \eta^{k\ell}_{ij}) \color{black}\right)  
 $$
+
+Then the lower bound is: 
+$$J(\theta,\eta,\tau) =   \sum_{i, k} \tau_{ik} \log \pi_k  + 
+\sum_{i < j} \sum_{k, \ell} \tau_{ik} \tau_{j\ell} \log A_{ijkl} - \sum_{i, k} \tau_{ik} \log \tau_{ik}$$
+
+
 setting the derivative wrt $\tau_{ik}$ to zero with the contraint $\sum_{k} \tau_{ik} = 0$ gives
 $$
 \log \tau_{ik} = \log \pi_k + \sum_{j, \ell} \tau_{j\ell} \log A_{ijk\ell} + \cst
