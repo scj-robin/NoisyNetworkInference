@@ -30,15 +30,11 @@ On peut utiliser theta dans le VEM. il faut juste qu'on soit cohérent en sortie
 
 ********************************************************************************
 
-
-
 Pour un K donné
 psi : N * 2; tau : n * K; eta : N * K * K
 
 Mstep <- (scoreMat, psi, tau, eta) 
     -> theta = list(pi, gamma, mu0, mu1, Sigma0, Sigma1)
-
-
 
 VEstep <- (scoreMat, theta) : SR
     calcul de phi = matrice N * 2
