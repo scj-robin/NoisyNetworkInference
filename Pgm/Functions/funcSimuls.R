@@ -30,7 +30,7 @@ makeVariance <- function(network, signed=FALSE, omegaTol=1e-10){
 
 ###############################################################################
 # Network inference
-getHugeScore <- function(data){
+getScoreHuge <- function(data){
    nbNodes <- ncol(data)
    # Choses lambda penalization grid
    fit <- huge(x=data); lambda <- fit$lambda; logRange <- range(log(fit$lambda))
@@ -52,10 +52,38 @@ getHugeScore <- function(data){
    for(s in 1:length(fit$path)){
       score[which(is.na(score) & (as.matrix(fit$path[[s]]) !=0))] <- lambda[s]
    }
-   return(list(fit=fit, score=score))
+   return(score)
 }
 
-getSaturninScore <- function(data){
-   score <- saturnin::edge.prob(saturnin::lweights_gaussian(data))
-   return(list(score=score))
+###############################################################################
+# Score tranformation
+boxCoxFunction <- function(x, lambda){
+   geoMean <- exp(mean(log(x)))
+   if(lambda>0){
+      y <- (x^lambda-1) / (lambda * geoMean^(lambda-1)) 
+   }else{
+      y <- geoMean * log(x)
+   }
 }
+
+boxCoxTransform <- function(score, plotit=FALSE){
+   scoreVec <- mat2Vect(score, symmetric=TRUE)
+   fitBC <- boxcox(scoreVec ~ 1, plotit=plotit); 
+   scoreBC <- boxCoxFunction(scoreVec, lambda=fitBC$x[which.max(fitBC$y)])
+   return(vect2Mat(scoreBC, symmetric=TRUE))
+}
+
+boxCoxGMMTransform <- function(score, nbLambda=20, plotit=FALSE){
+   scoreVec <- mat2Vect(score, symmetric=TRUE)
+   lambda <- seq(min(fitBC$x), max(fitBC$x), length.out=nbLambda)
+   cat('lambda =')
+   logLikGMM <- sapply(1:length(lambda), function(l){
+      cat(lambda[l], '')
+      Mclust(boxCoxFunction(scoreVec, lambda[l]), verbose=FALSE)$loglik
+   })
+   cat('\n')
+   if(plotit){plot(lambda, logLikGMM, type='b'); abline(v=lambda[which.max(logLikGMM)])}
+   scoreGMM <- boxCoxFunction(scoreVec, lambda=lambda[which.max(logLikGMM)])
+   return(vect2Mat(scoreGMM, symmetric=TRUE))
+}
+   
