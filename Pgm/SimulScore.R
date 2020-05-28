@@ -4,7 +4,7 @@ rm(list=ls()); par(mfrow=c(1, 1), pch=20)
 library(gtools); library(sna); library(MASS)
 library(mvtnorm); library(mclust); library(PLNmodels)
 library(huge); library(saturnin); library(GeneNet)
-source('../../NoisySBM/R/tools.R')
+library(NoisySBM)
 source('Functions/funcSimuls.R')
 
 # Dims
