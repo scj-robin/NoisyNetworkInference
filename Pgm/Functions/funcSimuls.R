@@ -75,6 +75,7 @@ boxCoxTransform <- function(score, plotit=FALSE){
 
 boxCoxGMMTransform <- function(score, nbLambda=20, plotit=FALSE){
    scoreVec <- mat2Vect(score, symmetric=TRUE)
+   fitBC <- boxcox(scoreVec ~ 1, plotit=plotit); 
    lambda <- seq(min(fitBC$x), max(fitBC$x), length.out=nbLambda)
    cat('lambda =')
    logLikGMM <- sapply(1:length(lambda), function(l){
