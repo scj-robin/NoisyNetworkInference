@@ -33,9 +33,17 @@ scoreList <- list()
 scoreList$huge <- getScoreHuge(data)
 scoreList$saturnin <- saturnin::edge.prob(saturnin::lweights_gaussian(data))
 scoreList$gnPcor <- GeneNet::ggm.estimate.pcor(data)^2
-scoreList$gnPval <- vect2Mat(1-GeneNet::network.test.edges(GeneNet::ggm.estimate.pcor(data), verbose=FALSE)$pval, symmetric=TRUE)
+scoreList$gnPval <- vect2Mat(1 - GeneNet::network.test.edges(GeneNet::ggm.estimate.pcor(data), verbose=FALSE)$pval, symmetric=TRUE)
 scoreAdHocList <- list(huge=log(scoreList$huge), saturnin=qnorm(scoreList$saturnin),
                        gnPcor=atanh(GeneNet::ggm.estimate.pcor(data))^2, gnPval=qnorm(scoreList$gnPval))
+
+
+
+hist(scoreList[[1]])
+hist(scoreList[[2]])
+hist(scoreList[[3]])
+hist(scoreList[[4]])
+
 
 # # Data simulation: PLN
 # Z <- rmvnorm(nbObs, sigma=covStruc$sigma)
@@ -54,9 +62,8 @@ scoreAdHocList <- list(huge=log(scoreList$huge), saturnin=qnorm(scoreList$saturn
 # Box-Cox + GMM transformations 
 par(mfcol=c(length(scoreList), 2))
 scoreBCList <- lapply(scoreList, function(score){boxCoxTransform(score, plotit=TRUE)})
-scoreGMMList <- lapply(scoreList, function(score){boxCoxGmmTransform(score, plotit=TRUE)})
+scoreGMMList <- lapply(scoreList, function(score){boxCoxGMMTransform(score, plotit=TRUE)})
 
-# Histograms
 par(mfrow=c(length(scoreList), 4))
 sapply(1:length(scoreList), function(s){
    hist(scoreList[[s]], breaks=nbNodes, xlab=names(scoreList)[s], ylab='', main='raw')
