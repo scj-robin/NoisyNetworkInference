@@ -30,6 +30,7 @@ makeVariance <- function(network, signed=FALSE, omegaTol=1e-10){
 
 ###############################################################################
 # Network inference
+library('huge')
 getScoreHuge <- function(data){
    nbNodes <- ncol(data)
    # Choses lambda penalization grid
