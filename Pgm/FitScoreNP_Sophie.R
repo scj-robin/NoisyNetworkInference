@@ -8,10 +8,11 @@ library(gtools)
 # library(NoisySBM)
 source('Functions/funcSimuls.R')
 
-source('D:/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/NOISY_SBM_Package/Package/NoisySBM/R/funcVEM.R')
-source('D:/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/NOISY_SBM_Package/Package/NoisySBM/R/tools.R')
-source('D:/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/NOISY_SBM_Package/Package/NoisySBM/R/estimateNoisySBM.R')
-source('D:/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/NOISY_SBM_Package/Package/NoisySBM/R/initInferenceNoisySBM.R')
+adresse_package <- '~/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/Noisy_SBM_Package/NoisySBM/'
+source(paste(adresse_package, 'R/funcVEM.R',sep = ''))
+source(paste(adresse_package, 'R/tools.R',sep = ''))
+source(paste(adresse_package, 'R/estimateNoisySBM.R',sep = ''))
+source(paste(adresse_package, 'R/initInferenceNoisySBM.R',sep = ''))
 
 source('../../NoisySBM/R/funcVEM.R')
 source('../../NoisySBM/R/tools.R')
@@ -68,7 +69,7 @@ scoreMat <- scoreList2scoreMat(scoreAdHocList, symmetric=TRUE)
 nbScores <- ncol(scoreMat); nbEdges <- nrow(scoreMat)
 
 # Distribution
-par(mfrow=c(2,nbScores/2))
+par(mfrow = c(2,nbScores/2))
 for(s in 1:length(scoreList)){
   plot(density(scoreMat[, s]), main = '', col="black")
   lines(density(scoreMat[which(networkVec==0), s]), col="blue")
@@ -87,15 +88,18 @@ for(s in 1:nbScores){
 ################################################################################
 # Fit np - Noisy SBM
 scoreListPar<- list(scoreList[[1]], scoreList[[2]], scoreList[[3]])
-estimateNoisySBM(scoreListPar, directed=FALSE, nparm = TRUE)
+estimateNoisySBM(scoreListPar, directed = FALSE, nparm = TRUE)
 
 # Init noisySBM
-init <- initInferenceNoisySBM(transList[[trans]], directed=directed)
+init <- initInferenceNoisySBM( scoreListPar, directed=directed)
 
-kerSigma <- Hpi(scoreList2scoreMat(transList[[trans]], symmetric=!directed))
+kerSigma <- Hpi(scoreList2scoreMat(scoreListPar, symmetric=!directed))
+scoreMat <- scoreList2scoreMat(scoreListPar, symmetric = !directed)
 gram <- sapply(1:nrow(scoreMat), function(ij){dmvnorm(scoreMat, mean=scoreMat[ij, ], sigma=kerSigma)})
-vem <- VEMNoisySBM(scoreMat=scoreList2scoreMat(transList[[trans]], symmetric=!directed), directed=directed, 
-                   qDistInit=list(psi = init$psi, tau=init$tau[[3]], eta=init$eta[[3]]), nparm=TRUE)
+
+qDistInit = list(psi = init$psi, tau = init$tau[[3]], eta = init$eta[[3]])
+vem <- VEMNoisySBM(scoreMat , directed = directed, 
+                   qDistInit = qDistInit , nparm = TRUE)
 # np-Phi
 prop <- colMeans(init$psi)
 phi <- gram%*%init$psi %*% diag(prop)
@@ -104,7 +108,8 @@ colScale <- ceiling(10*(phi-min(phi)) / (max(phi)-min(phi)))
 # Fit
 par(mfrow=c(2, 2), mex=.5)
 plot(scoreMat, col=colScale[, 1]); plot(scoreMat, col=colScale[, 2])
-for(s in 1:length(scoreList)){
+
+for(s in 1:length(scoreListPar)){
   plot(density(scoreMat[, s]), main='')
   points(scoreMat[, s], colMeans(gramMarg[[s]]), col=1, pch='.')
   for(g in c(0, 1)){
