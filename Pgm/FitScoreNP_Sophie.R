@@ -8,16 +8,18 @@ library(gtools)
 # library(NoisySBM)
 source('Functions/funcSimuls.R')
 
-adresse_package <- '~/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/Noisy_SBM_Package/NoisySBM/'
+#adresse_package <- '~/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/Noisy_SBM_Package/NoisySBM/'
+adresse_package <- 'D:/WORK_ALL/RECHERCHE/PACKAGES_R/SCORESBM/NOISY_SBM_Package/Package/NoisySBM/'
+
 source(paste(adresse_package, 'R/funcVEM.R',sep = ''))
 source(paste(adresse_package, 'R/tools.R',sep = ''))
 source(paste(adresse_package, 'R/estimateNoisySBM.R',sep = ''))
 source(paste(adresse_package, 'R/initInferenceNoisySBM.R',sep = ''))
 
-source('../../NoisySBM/R/funcVEM.R')
-source('../../NoisySBM/R/tools.R')
-source('../../NoisySBM/R/estimateNoisySBM.R')
-source('../../NoisySBM/R/initInferenceNoisySBM.R')
+#source('../../NoisySBM/R/funcVEM.R')
+#source('../../NoisySBM/R/tools.R')
+#source('../../NoisySBM/R/estimateNoisySBM.R')
+#source('../../NoisySBM/R/initInferenceNoisySBM.R')
 
 ################################################################################
 # Data
@@ -58,13 +60,15 @@ scoreList$gnPval <- vect2Mat(1 - GeneNet::network.test.edges(GeneNet::ggm.estima
 r <- max(scoreList$saturnin[scoreList$saturnin < 0.9999])
 scoreList$saturnin[scoreList$saturnin > 0.9999] = r
 scoreAdHocList <- list(huge= log(scoreList$huge), saturnin=logit(scoreList$saturnin),
-                       gnPcor=atanh(GeneNet::ggm.estimate.pcor(data))^2, gnPval=qnorm(scoreList$gnPval))
+                       gnPcor=atanh(GeneNet::ggm.estimate.pcor(data))^2, gnPval=qnorm(1-scoreList$gnPval))
 
 
 
 ################################################################################
 # Parms for np-inference
-trans <- 2
+
+scoreList <- scoreAdHocList 
+
 scoreMat <- scoreList2scoreMat(scoreAdHocList, symmetric=TRUE)
 nbScores <- ncol(scoreMat); nbEdges <- nrow(scoreMat)
 
@@ -77,45 +81,48 @@ for(s in 1:length(scoreList)){
 }
 
 # Kernel width + symmetric Gram matrix
-nbScores = 3
+nbScores = 4
+
 kerSigma <- Hpi(scoreMat[,1:nbScores])
 gram <- sapply(1:nbEdges, function(ij){dmvnorm(scoreMat[, 1:nbScores], mean=scoreMat[ij, 1:nbScores], sigma = kerSigma)})
 gramMarg <- list()
-for(s in 1:nbScores){
+for (s in 1:nbScores){
   gramMarg[[s]] <- sapply(1:nbEdges, function(ij){dnorm(scoreMat[, s], mean=scoreMat[ij, s], sd=sqrt(kerSigma[s, s]))})
   }
 
 ################################################################################
-# Fit np - Noisy SBM
-scoreListPar<- list(scoreList[[1]], scoreList[[2]], scoreList[[3]])
-estimateNoisySBM(scoreListPar, directed = FALSE, nparm = TRUE)
+# Fit model  with 3 blocs
+################################################################################
 
-# Init noisySBM
-init <- initInferenceNoisySBM( scoreListPar, directed=directed)
+#----------  Init générale noisySBM
+init <- initInferenceNoisySBM(scoreList, directed = directed)
 
-kerSigma <- Hpi(scoreList2scoreMat(scoreListPar, symmetric=!directed))
-scoreMat <- scoreList2scoreMat(scoreListPar, symmetric = !directed)
-gram <- sapply(1:nrow(scoreMat), function(ij){dmvnorm(scoreMat, mean=scoreMat[ij, ], sigma=kerSigma)})
 
+
+#------------------  Init à 3 blocs
 qDistInit = list(psi = init$psi, tau = init$tau[[3]], eta = init$eta[[3]])
-vem <- VEMNoisySBM(scoreMat , directed = directed, 
-                   qDistInit = qDistInit , nparm = TRUE)
-# np-Phi
-prop <- colMeans(init$psi)
-phi <- gram%*%init$psi %*% diag(prop)
-colScale <- ceiling(10*(phi-min(phi)) / (max(phi)-min(phi)))
+clusterInit <- apply(qDistInit$tau,1,which.max)
+table(clusterInit,clusterTrue)
 
-# Fit
-par(mfrow=c(2, 2), mex=.5)
-plot(scoreMat, col=colScale[, 1]); plot(scoreMat, col=colScale[, 2])
+#----------------- EstimNparam
+vemNparm <- VEMNoisySBM(scoreMat , directed = directed, qDistInit = qDistInit , nparm = TRUE,gram=gram,monitoring = list(lowerBound = TRUE))
+clusterEstimNparm <- apply(vemNparm$qDist$tau,1,which.max)
+table(clusterEstimNparm,clusterTrue)
 
-for(s in 1:length(scoreListPar)){
-  plot(density(scoreMat[, s]), main='')
-  points(scoreMat[, s], colMeans(gramMarg[[s]]), col=1, pch='.')
-  for(g in c(0, 1)){
-    dens <- density(scoreMat[which(networkVec==g), s])
-    lines(dens$x, prop[g+1]*dens$y, col=2*(1+g))
-    points(scoreMat[, s], gramMarg[[s]]%*%init$psi[, 1+g] / nbEdges, col=2*(1+g), pch='.')
-  }
-}
+
+#-----------------  EstimNparam
+vemGauss <- VEMNoisySBM(scoreMat , directed = directed, qDistInit = qDistInit ,estimOptions=list(verbosity =2),monitoring = list(lowerBound = TRUE))
+clusterEstimGauss <- apply(vemGauss$qDist$tau,1,which.max)
+table(clusterEstimGauss,clusterTrue)
+
+
+################################################################################
+# Fit model  with alls blocs
+################################################################################
+
+#----------------- EstimNparam
+estimNparm <- estimateNoisySBM(scoreList, directed = directed, nparm = TRUE,kerSigma = kerSigma, estimOptions = list(verbosity = 2),monitoring = list(lowerBound = TRUE))
+
+#---------------------- EstimPan
+estimParm <- estimateNoisySBM(scoreList, directed = directed, nparm = TRUE,monitoring = list(lowerBound = TRUE))
 
