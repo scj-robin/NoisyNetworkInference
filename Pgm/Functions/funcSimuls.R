@@ -34,7 +34,7 @@ library('huge')
 getScoreHuge <- function(data){
    nbNodes <- ncol(data)
    # Choses lambda penalization grid
-   fit <- huge(x=data); lambda <- fit$lambda; logRange <- range(log(fit$lambda))
+   fit <- huge(x=data); lambda <- fit$lambda; logRange <- range(log(lambda))
    while(sum(as.matrix(fit$path[[1]])) > 0){
       logRange[2] <- logRange[2] + diff(logRange)
       lambda <- exp(seq(logRange[1], logRange[2], length.out=length(lambda)))
@@ -53,6 +53,35 @@ getScoreHuge <- function(data){
    for(s in 1:length(fit$path)){
       score[which(is.na(score) & (as.matrix(fit$path[[s]]) !=0))] <- lambda[s]
    }
+   return(score)
+}
+
+library('simone')
+getScoreSimone <- function(data, clust=TRUE){
+   nbNodes <- ncol(data)
+   fit <- simone(data, clustering=clust) 
+   # # Choses lambda penalization grid
+   # fit <- simone(data, clustering=clust) 
+   # lambda <- fit$penalties; logRange <- range(log(lambda))
+   # while(sum(as.matrix(fit$networks[[1]])) > 0){
+   #    logRange[2] <- logRange[2] + diff(logRange)/100
+   #    lambda <- exp(seq(logRange[1], logRange[2], length.out=length(lambda)))
+   #    fit <- simone(data, clustering=clust, setOptions(penalties=lambda))
+   # }
+   # while(sum(as.matrix(fit$networks[[length(fit$networks)]])) < nbNodes*(nbNodes-1)){
+   #    logRange[1] <- logRange[1] - diff(logRange)
+   #    lambda <- exp(seq(logRange[2], logRange[1], length.out=length(lambda)))
+   #    fit <- simone(data, clustering=clust, setOptions(penalties=lambda))
+   # }
+   # # Final fit
+   # lambda <- exp(seq(logRange[2], logRange[1], length.out=min(nbNodes^2, 1e3)))
+   # fit <- simone(data, clustering=clust, setOptions(penalties=lambda))
+   # Get scores
+   score <- matrix(NA, nbNodes, nbNodes)
+   for(s in 1:length(fit$network)){
+      score[which(is.na(score) & (as.matrix(fit$network[[s]]) !=0))] <- fit$penalties[s]
+   }
+   score[which(is.na(score))] <- max(score, na.rm=TRUE) + exp(mean(diff(log(fit$penalties))))
    return(score)
 }
 
